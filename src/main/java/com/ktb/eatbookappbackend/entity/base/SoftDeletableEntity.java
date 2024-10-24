@@ -1,14 +1,16 @@
-package com.ktb.eatbookappbackend.domain.common;
+package com.ktb.eatbookappbackend.entity.base;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.MappedSuperclass;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 import java.time.LocalDateTime;
 
 @MappedSuperclass
-public class SoftDeletableEntity extends BaseEntity{
+@SQLDelete(sql = "UPDATE ${hibernate.entityName} SET deleted_at = NOW() WHERE id = ?")
+@Where(clause = "deleted_at IS NULL")
+public abstract class SoftDeletableEntity extends BaseEntity {
 
-    @Column
     private LocalDateTime deletedAt;
 
     public boolean isDeleted() {
