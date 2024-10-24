@@ -1,4 +1,4 @@
-package com.ktb.eatbookappbackend.domain.common;
+package com.ktb.eatbookappbackend.entity.base;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;
@@ -13,10 +13,10 @@ import java.time.LocalDateTime;
 @MappedSuperclass
 @Getter
 @EntityListeners(AuditingEntityListener.class)
-public class BaseEntity {
+public abstract class BaseEntity {
 
     @CreatedDate
-    @Column(nullable = false)
+    @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
     @LastModifiedDate
