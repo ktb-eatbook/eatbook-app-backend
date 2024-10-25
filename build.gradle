@@ -39,3 +39,17 @@ dependencies {
 tasks.named('test') {
     useJUnitPlatform()
 }
+
+task copyMainConfig(type: Copy) {
+    from './config'
+    include '*.yml'
+    into './src/main/resources'
+}
+task copyMigration(type: Copy) {
+    from './config/migration'
+    include '*.sql'
+    into './src/main/resources/migration'
+}
+tasks.named('processResources') {
+    dependsOn copyMainConfig, copyMigration
+}

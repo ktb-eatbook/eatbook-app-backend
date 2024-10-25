@@ -40,4 +40,9 @@ out/
 application.properties
 application.yml
 application.yaml
-src/main/resources/yaml/**
+
+# Ignore application-specific YAML files
+/src/main/resources/application-*.yml
+src/main/resources/application.yml
+# Ignore migraiton files
+/src/main/resources/migration/
