@@ -23,6 +23,11 @@ public class Author extends SoftDeletableEntity {
     @Column(nullable = false)
     private String name;
 
+    @Builder
+    public Author(String name) {
+        this.id = id;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

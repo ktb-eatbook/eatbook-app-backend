@@ -3,6 +3,7 @@ package com.ktb.eatbookappbackend.entity;
 import com.ktb.eatbookappbackend.entity.base.SoftDeletableEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -21,6 +22,11 @@ public class Category extends SoftDeletableEntity {
 
     @Column(nullable = false, length = 50)
     private String name;
+
+    @Builder
+    public Category(String name) {
+        this.name = name;
+    }
 
     @Override
     public boolean equals(Object o) {

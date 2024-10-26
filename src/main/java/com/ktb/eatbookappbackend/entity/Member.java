@@ -4,6 +4,7 @@ import com.ktb.eatbookappbackend.entity.base.SoftDeletableEntity;
 import com.ktb.eatbookappbackend.entity.constant.Role;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -38,6 +39,14 @@ public class Member extends SoftDeletableEntity {
     private String passwordHash;
 
     private String email;
+
+
+    @Builder
+    public Member(String nickname, String profileImageUrl, String email) {
+        this.nickname = nickname;
+        this.profileImageUrl = profileImageUrl;
+        this.email = email;
+    }
 
     @Override
     public boolean equals(Object o) {

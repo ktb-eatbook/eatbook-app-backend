@@ -4,6 +4,7 @@ package com.ktb.eatbookappbackend.entity;
 import com.ktb.eatbookappbackend.entity.base.SoftDeletableEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -43,6 +44,14 @@ public class Novel extends SoftDeletableEntity {
 
     @OneToMany(mappedBy = "novel", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<NovelAuthor> novelAuthors = new ArrayList<>();
+
+    @Builder
+    public Novel(String title, String coverImageUrl, String summary, boolean isCompleted) {
+        this.title = title;
+        this.coverImageUrl = coverImageUrl;
+        this.summary = summary;
+        this.isCompleted = isCompleted;
+    }
 
     @Override
     public boolean equals(Object o) {
