@@ -29,7 +29,7 @@ public class FileMetadata extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private FileType type;
 
-    @Column(nullable = false, length = 255)
+    @Column(nullable = false)
     private String path;
 
     @Id

@@ -22,10 +22,9 @@ public class Novel extends SoftDeletableEntity {
     @Column(columnDefinition = "VARCHAR(36)")
     private UUID id;
 
-    @Column(nullable = false, length = 255)
+    @Column(nullable = false)
     private String title;
 
-    @Column(length = 255)
     private String coverImageUrl;
 
     @Column(length = 1000)

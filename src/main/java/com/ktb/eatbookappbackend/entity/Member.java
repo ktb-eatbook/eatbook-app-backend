@@ -30,16 +30,13 @@ public class Member extends SoftDeletableEntity {
     @Enumerated(EnumType.STRING)
     private Role role = Role.USER;
 
-    @Column(length = 255)
     private String profileImageUrl;
 
     @Column
     private LocalDateTime lastLogin;
 
-    @Column(length = 255)
     private String passwordHash;
 
-    @Column(length = 255)
     private String email;
 
     @Override

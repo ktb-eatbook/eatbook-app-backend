@@ -23,7 +23,7 @@ public class Episode extends SoftDeletableEntity {
     @Column(columnDefinition = "VARCHAR(36)")
     private UUID id;
 
-    @Column(nullable = false, length = 255)
+    @Column(nullable = false)
     private String title;
 
     @Column(nullable = false)
