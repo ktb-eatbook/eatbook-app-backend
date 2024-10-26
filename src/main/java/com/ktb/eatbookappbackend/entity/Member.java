@@ -28,7 +28,7 @@ public class Member extends SoftDeletableEntity {
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private Role role = Role.USER;
+    private Role role = Role.MEMBER;
 
     private String profileImageUrl;
 
