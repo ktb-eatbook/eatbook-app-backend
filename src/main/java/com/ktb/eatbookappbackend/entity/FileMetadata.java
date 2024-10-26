@@ -9,6 +9,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.antlr.v4.runtime.misc.NotNull;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -25,14 +26,17 @@ public class FileMetadata extends BaseEntity {
     @Column(columnDefinition = "VARCHAR(36)")
     private UUID id;
 
+    @NotNull
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private FileType type;
 
+    @NotNull
     @Column(nullable = false)
     private String path;
 
     @Id
+    @NotNull
     @ManyToOne
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "episode_id", nullable = false)

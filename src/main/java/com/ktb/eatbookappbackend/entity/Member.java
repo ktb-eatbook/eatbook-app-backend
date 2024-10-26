@@ -7,6 +7,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.antlr.v4.runtime.misc.NotNull;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -24,9 +25,11 @@ public class Member extends SoftDeletableEntity {
     @Column(columnDefinition = "VARCHAR(36)")
     private UUID id;
 
+    @NotNull
     @Column(nullable = false, length = 100)
     private String nickname;
 
+    @NotNull
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Role role = Role.MEMBER;

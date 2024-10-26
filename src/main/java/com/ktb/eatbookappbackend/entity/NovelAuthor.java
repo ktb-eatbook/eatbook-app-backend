@@ -6,6 +6,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.antlr.v4.runtime.misc.NotNull;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.data.annotation.CreatedDate;
@@ -31,6 +32,7 @@ public class NovelAuthor {
     @JoinColumn(name = "author_id", nullable = false)
     private Author author;
 
+    @NotNull
     @CreatedDate
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;

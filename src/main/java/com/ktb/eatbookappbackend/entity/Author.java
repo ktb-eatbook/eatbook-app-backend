@@ -6,6 +6,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.antlr.v4.runtime.misc.NotNull;
 
 import java.util.Objects;
 import java.util.UUID;
@@ -20,6 +21,7 @@ public class Author extends SoftDeletableEntity {
     @Column(columnDefinition = "VARCHAR(36)")
     private UUID id;
 
+    @NotNull
     @Column(nullable = false)
     private String name;
 

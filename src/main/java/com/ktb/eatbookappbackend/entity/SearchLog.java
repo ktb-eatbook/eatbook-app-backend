@@ -5,6 +5,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.antlr.v4.runtime.misc.NotNull;
 import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDateTime;
@@ -21,10 +22,12 @@ public class SearchLog {
     @Column(columnDefinition = "VARCHAR(36)")
     private UUID id;
 
+    @NotNull
     @CreatedDate
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
+    @NotNull
     @Column(nullable = false)
     private String term;
 

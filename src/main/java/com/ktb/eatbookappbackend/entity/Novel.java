@@ -7,6 +7,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.antlr.v4.runtime.misc.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +24,7 @@ public class Novel extends SoftDeletableEntity {
     @Column(columnDefinition = "VARCHAR(36)")
     private UUID id;
 
+    @NotNull
     @Column(nullable = false)
     private String title;
 
@@ -31,9 +33,11 @@ public class Novel extends SoftDeletableEntity {
     @Column(length = 1000)
     private String summary;
 
+    @NotNull
     @Column(nullable = false)
     private int viewCount = 0;
 
+    @NotNull
     @Column(nullable = false)
     private boolean isCompleted;
 

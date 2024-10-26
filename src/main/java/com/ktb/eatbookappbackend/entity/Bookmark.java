@@ -6,6 +6,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.antlr.v4.runtime.misc.NotNull;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.data.annotation.CreatedDate;
@@ -20,6 +21,7 @@ import java.util.Objects;
 public class Bookmark {
 
     @Id
+    @NotNull
     @ManyToOne
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "novel_id", nullable = false)
@@ -32,6 +34,7 @@ public class Bookmark {
     private Member member;
 
     @CreatedDate
+    @NotNull
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
