@@ -1,12 +1,13 @@
-package com.ktb.eatbookappbackend.entity;
+package com.ktb.eatbookappbackend.entity.IdClass;
 
+import com.ktb.eatbookappbackend.entity.Member;
+import com.ktb.eatbookappbackend.entity.Novel;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.Objects;
-import java.util.UUID;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)

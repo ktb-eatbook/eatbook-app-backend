@@ -1,5 +1,6 @@
 package com.ktb.eatbookappbackend.entity;
 
+import com.ktb.eatbookappbackend.entity.IdClass.NovelAuthorId;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -11,7 +12,6 @@ import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
-import java.util.UUID;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)

@@ -1,5 +1,6 @@
 package com.ktb.eatbookappbackend.entity;
 
+import com.ktb.eatbookappbackend.entity.IdClass.NovelCategoryId;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
