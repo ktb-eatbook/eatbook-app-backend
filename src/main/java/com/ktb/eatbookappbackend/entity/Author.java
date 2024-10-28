@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 import org.antlr.v4.runtime.misc.NotNull;
 
 import java.util.Objects;
-import java.util.UUID;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -17,9 +16,9 @@ import java.util.UUID;
 public class Author extends SoftDeletableEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(columnDefinition = "VARCHAR(36)")
-    private UUID id;
+    @Column(length = 36)
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private String id;
 
     @NotNull
     @Column(nullable = false)
@@ -27,7 +26,7 @@ public class Author extends SoftDeletableEntity {
 
     @Builder
     public Author(String name) {
-        this.id = id;
+        this.name = name;
     }
 
     @Override

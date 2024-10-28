@@ -10,7 +10,6 @@ import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
-import java.util.UUID;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -18,9 +17,9 @@ import java.util.UUID;
 public class SearchLog {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(columnDefinition = "VARCHAR(36)")
-    private UUID id;
+    @Column(length = 36)
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private String id;
 
     @NotNull
     @CreatedDate

@@ -2,7 +2,6 @@ package com.ktb.eatbookappbackend.entity;
 
 import com.ktb.eatbookappbackend.entity.base.SoftDeletableEntity;
 import com.ktb.eatbookappbackend.entity.constant.EpisodeReleaseStatus;
-import com.ktb.eatbookappbackend.entity.constant.Role;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -12,7 +11,6 @@ import org.antlr.v4.runtime.misc.NotNull;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
-import java.util.UUID;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -20,9 +18,9 @@ import java.util.UUID;
 public class Episode extends SoftDeletableEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(columnDefinition = "VARCHAR(36)")
-    private UUID id;
+    @Column(length = 36)
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private String id;
 
     @NotNull
     @Column(nullable = false)

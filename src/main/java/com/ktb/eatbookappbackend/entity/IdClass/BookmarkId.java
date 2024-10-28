@@ -13,13 +13,13 @@ import java.util.Objects;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class BookmarkId {
 
-    private Novel novel;
-    private Member member;
+    private String novelId;
+    private String memberId;
 
     @Builder
-    public BookmarkId(Novel novel, Member member) {
-        this.novel = novel;
-        this.member = member;
+    public BookmarkId(String novelId, String memberId) {
+        this.novelId = novelId;
+        this.memberId = memberId;
     }
 
     @Override
@@ -27,11 +27,11 @@ public class BookmarkId {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         BookmarkId that = (BookmarkId) o;
-        return Objects.equals(novel, that.novel) && Objects.equals(member, that.member);
+        return Objects.equals(novelId, that.novelId) && Objects.equals(memberId, that.memberId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(novel, member);
+        return Objects.hash(novelId, memberId);
     }
 }

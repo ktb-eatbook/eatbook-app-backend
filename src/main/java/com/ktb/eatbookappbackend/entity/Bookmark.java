@@ -21,25 +21,34 @@ import java.util.Objects;
 public class Bookmark {
 
     @Id
-    @NotNull
-    @ManyToOne
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "novel_id", nullable = false)
-    private Novel novel;
+    @Column(name = "novel_id", length = 36)
+    private String novelId;
 
     @Id
-    @ManyToOne
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "member_id", nullable = false)
-    private Member member;
+    @Column(name = "member_id", length = 36)
+    private String memberId;
 
-    @CreatedDate
+    @Column(nullable = false)
     @NotNull
-    @Column(nullable = false, updatable = false)
+    @CreatedDate
     private LocalDateTime createdAt;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(nullable = false)
+    @NotNull
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private Novel novel;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(nullable = false)
+    @NotNull
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private Member member;
+
     @Builder
-    public Bookmark(Novel novel, Member member) {
+    public Bookmark(String novelId, String memberId, Novel novel, Member member) {
+        this.novelId = novelId;
+        this.memberId = memberId;
         this.novel = novel;
         this.member = member;
     }

@@ -2,7 +2,6 @@ package com.ktb.eatbookappbackend.entity;
 
 
 import com.ktb.eatbookappbackend.entity.base.BaseEntity;
-import com.ktb.eatbookappbackend.entity.constant.EpisodeReleaseStatus;
 import com.ktb.eatbookappbackend.entity.constant.FileType;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -14,7 +13,6 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import java.util.Objects;
-import java.util.UUID;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -22,9 +20,9 @@ import java.util.UUID;
 public class FileMetadata extends BaseEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(columnDefinition = "VARCHAR(36)")
-    private UUID id;
+    @Column(length = 36)
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private String id;
 
     @NotNull
     @Column(nullable = false)
