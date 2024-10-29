@@ -32,8 +32,8 @@ public class MemberService {
         Page<Bookmark> bookmarkPage = bookmarkRepository.findByMemberIdWithNovel(memberId, pageRequest);
 
         PaginationInfoDTO paginationInfo = new PaginationInfoDTO(
-                bookmarkPage.getNumber() + 1,
-                bookmarkPage.getSize(),
+                page,
+                size,
                 (int) bookmarkPage.getTotalElements(),
                 bookmarkPage.getTotalPages()
         );
