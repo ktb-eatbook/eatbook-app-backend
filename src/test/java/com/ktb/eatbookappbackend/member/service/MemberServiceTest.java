@@ -50,7 +50,7 @@ public class MemberServiceTest {
     }
 
     @Test
-    public void getMemberBookmarkedNovels_ValidInput_ReturnsExpectedBookmarks() {
+    public void should_ReturnBookmarks_When_ValidInput() {
         // Given
         String memberId = member.getId();
         int page = MemberFixture.PAGE;
@@ -94,7 +94,7 @@ public class MemberServiceTest {
     
 
     @Test
-    public void getMemberBookmarkedNovels_NoBookmarks_ReturnsEmptyResult() {
+    public void should_ReturnEmptyResult_When_NoBookmarks() {
         // Given
         String memberId = member.getId();
         int page = MemberFixture.PAGE;
