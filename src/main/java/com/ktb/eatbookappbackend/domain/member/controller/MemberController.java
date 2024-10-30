@@ -40,8 +40,8 @@ public class MemberController {
      */
     @Authenticated
     @GetMapping("/bookmarks")
-    public ResponseEntity<?> getMemberBookmarkedNovels(@RequestParam @Min(1) final int page,
-                                                       @RequestParam @Min(1) final int size) {
+    public ResponseEntity<?> getMemberBookmarkedNovels(@RequestParam(name = "page") @Min(1) final int page,
+                                                       @RequestParam(name = "size") @Min(1) final int size) {
         String memberId = AuthenticationAspect.getAuthenticatedMemberId();
         PaginationWithDataDTO<MemberBookmarkedNovelDTO> bookmarkedNovels = memberService.getMemberBookmarkedNovels(memberId, page, size);
         if (page - 1 > bookmarkedNovels.pagination().totalPages()) {
