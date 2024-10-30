@@ -9,7 +9,7 @@ public interface MessageCode {
 
     @Getter
     enum GlobalErrorMessage implements MessageCode {
-        INVALID_PARAMETER("잘못된 파라미터입니다.", HttpStatus.BAD_REQUEST),
+        INVALID_QUERY_PARAMETER("잘못된 쿼리 파라미터입니다.", HttpStatus.BAD_REQUEST),
         UNAUTHORIZED_ACCESS("인증되지 않은 요청입니다.", HttpStatus.UNAUTHORIZED);
 
         private final String message;

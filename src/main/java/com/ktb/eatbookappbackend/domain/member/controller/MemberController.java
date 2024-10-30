@@ -9,13 +9,16 @@ import com.ktb.eatbookappbackend.domain.global.reponse.SuccessResponseDTO;
 import com.ktb.eatbookappbackend.domain.member.dto.MemberBookmarkedNovelDTO;
 import com.ktb.eatbookappbackend.domain.member.message.MemberSuccessCode;
 import com.ktb.eatbookappbackend.domain.member.service.MemberService;
+import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+@Validated
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/member")
@@ -37,18 +40,13 @@ public class MemberController {
      */
     @Authenticated
     @GetMapping("/bookmarks")
-    public ResponseEntity<?> getMemberBookmarkedNovels(@RequestParam final int page, @RequestParam final int size) {
+    public ResponseEntity<?> getMemberBookmarkedNovels(@RequestParam @Min(1) final int page,
+                                                       @RequestParam @Min(1) final int size) {
         String memberId = AuthenticationAspect.getAuthenticatedMemberId();
-        if (page < 1 || size < 1) {
-            return ResponseEntity.badRequest()
-                    .body(FailureResponseDTO.of(MessageCode.GlobalErrorMessage.INVALID_PARAMETER));
-        }
-
         PaginationWithDataDTO<MemberBookmarkedNovelDTO> bookmarkedNovels = memberService.getMemberBookmarkedNovels(memberId, page, size);
-
         if (page - 1 > bookmarkedNovels.pagination().totalPages()) {
             return ResponseEntity.badRequest()
-                    .body(FailureResponseDTO.of(MessageCode.GlobalErrorMessage.INVALID_PARAMETER));
+                    .body(FailureResponseDTO.of(MessageCode.GlobalErrorMessage.INVALID_QUERY_PARAMETER));
         }
 
         if (bookmarkedNovels.data().get("novels").isEmpty()) {
