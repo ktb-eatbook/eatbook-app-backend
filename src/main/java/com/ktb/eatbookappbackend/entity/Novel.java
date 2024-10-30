@@ -20,9 +20,9 @@ import java.util.UUID;
 public class Novel extends SoftDeletableEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(columnDefinition = "VARCHAR(36)")
-    private UUID id;
+    @Column(length = 36)
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private String id;
 
     @NotNull
     @Column(nullable = false)

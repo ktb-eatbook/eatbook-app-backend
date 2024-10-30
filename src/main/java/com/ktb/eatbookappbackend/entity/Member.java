@@ -21,9 +21,9 @@ import java.util.UUID;
 public class Member extends SoftDeletableEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(columnDefinition = "VARCHAR(36)")
-    private UUID id;
+    @Column(length = 36)
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private String id;
 
     @NotNull
     @Column(nullable = false, length = 100)
@@ -42,7 +42,6 @@ public class Member extends SoftDeletableEntity {
     private String passwordHash;
 
     private String email;
-
 
     @Builder
     public Member(String nickname, String profileImageUrl, String email) {
