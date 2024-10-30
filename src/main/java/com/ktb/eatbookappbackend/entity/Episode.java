@@ -31,7 +31,10 @@ public class Episode extends SoftDeletableEntity {
     private int chapterNumber;
 
     @Column(length = 1000)
-    private LocalDateTime uploadDate;
+    private LocalDateTime scheduledReleaseDate;
+
+    @Column(length = 1000)
+    private LocalDateTime releasedDate;
 
     @NotNull
     @Column(nullable = false)
@@ -48,10 +51,11 @@ public class Episode extends SoftDeletableEntity {
     private Novel novel;
 
     @Builder
-    public Episode(String title, int chapterNumber, LocalDateTime uploadDate, EpisodeReleaseStatus releaseStatus, Novel novel) {
+    public Episode(String title, int chapterNumber, LocalDateTime scheduledReleaseDate, LocalDateTime releasedDate, EpisodeReleaseStatus releaseStatus, Novel novel) {
         this.title = title;
         this.chapterNumber = chapterNumber;
-        this.uploadDate = uploadDate;
+        this.scheduledReleaseDate = scheduledReleaseDate;
+        this.releasedDate = releasedDate;
         this.releaseStatus = releaseStatus != null ? releaseStatus : EpisodeReleaseStatus.PUBLIC;
         this.novel = novel;
     }
