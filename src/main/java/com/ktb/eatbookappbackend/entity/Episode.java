@@ -30,10 +30,8 @@ public class Episode extends SoftDeletableEntity {
     @Column(nullable = false)
     private int chapterNumber;
 
-    @Column(length = 1000)
     private LocalDateTime scheduledReleaseDate;
 
-    @Column(length = 1000)
     private LocalDateTime releasedDate;
 
     @NotNull
