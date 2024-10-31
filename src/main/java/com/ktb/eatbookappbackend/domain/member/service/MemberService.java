@@ -1,10 +1,12 @@
 package com.ktb.eatbookappbackend.domain.member.service;
 
+import com.ktb.eatbookappbackend.domain.favorite.repository.FavoriteRepository;
 import com.ktb.eatbookappbackend.domain.global.dto.PaginationWithDataDTO;
 import com.ktb.eatbookappbackend.domain.bookmark.repository.BookmarkRepository;
 import com.ktb.eatbookappbackend.domain.global.dto.PaginationInfoDTO;
 import com.ktb.eatbookappbackend.domain.member.dto.MemberBookmarkedNovelDTO;
 import com.ktb.eatbookappbackend.entity.Bookmark;
+import com.ktb.eatbookappbackend.entity.Novel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -18,6 +20,7 @@ import java.util.stream.Collectors;
 public class MemberService {
 
     private final BookmarkRepository bookmarkRepository;
+    private final FavoriteRepository favoriteRepository;
 
     /**
      * 특정 멤버가 북마크한 소설 목록을 페이지로 나누어 반환합니다.
@@ -39,7 +42,12 @@ public class MemberService {
         );
 
         List<MemberBookmarkedNovelDTO> bookmarks = bookmarkPage.getContent().stream()
-                .map(bookmark -> MemberBookmarkedNovelDTO.of(bookmark.getNovel()))
+                .map(bookmark -> {
+                    Novel novel = bookmark.getNovel();
+                    int favoriteCount = favoriteRepository.countByNovelId(novel.getId());
+                    boolean isMemberFavorite = favoriteRepository.existsByNovelIdAndMemberId(novel.getId(), memberId);
+                    return MemberBookmarkedNovelDTO.of(bookmark.getNovel(), favoriteCount, isMemberFavorite);
+                })
                 .collect(Collectors.toList());
 
         return PaginationWithDataDTO.of(paginationInfo, "novels", bookmarks);

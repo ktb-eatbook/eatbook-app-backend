@@ -10,14 +10,14 @@ public record MemberBookmarkedNovelDTO(
         int favoriteCount,
         boolean isFavorited
 ) {
-    public static MemberBookmarkedNovelDTO of(Novel novel) {
+    public static MemberBookmarkedNovelDTO of(Novel novel, int favoriteCount, boolean isFavorited) {
         return new MemberBookmarkedNovelDTO(
                 novel.getId(),
                 novel.getTitle(),
                 novel.getCoverImageUrl(),
                 novel.getViewCount(),
-                0, // TO DO - 실제 좋아요 수 반환
-                false // TO DO - 실제 좋아요 여부 반환
+                favoriteCount,
+                isFavorited
         );
     }
 }
