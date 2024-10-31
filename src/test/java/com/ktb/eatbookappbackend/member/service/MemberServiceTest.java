@@ -1,6 +1,7 @@
 package com.ktb.eatbookappbackend.member.service;
 
 import com.ktb.eatbookappbackend.domain.bookmark.repository.BookmarkRepository;
+import com.ktb.eatbookappbackend.domain.favorite.repository.FavoriteRepository;
 import com.ktb.eatbookappbackend.domain.global.dto.PaginationInfoDTO;
 import com.ktb.eatbookappbackend.domain.global.dto.PaginationWithDataDTO;
 import com.ktb.eatbookappbackend.domain.member.dto.MemberBookmarkedNovelDTO;
@@ -34,6 +35,9 @@ public class MemberServiceTest {
     @Mock
     private BookmarkRepository bookmarkRepository;
 
+    @Mock
+    private FavoriteRepository favoriteRepository;
+
     @InjectMocks
     private MemberService memberService;
 
@@ -57,14 +61,16 @@ public class MemberServiceTest {
         int size = MemberFixture.SIZE;
         int totalItems = MemberFixture.TOTAL_ITEMS;
         int totalPages = MemberFixture.TOTAL_PAGES;
+        int favoriteCount = MemberFixture.FAVORITE_COUNT;
+        boolean isFavorited = MemberFixture.IS_FAVORITED;
 
         MemberBookmarkedNovelDTO expectedBookmarkDTO = new MemberBookmarkedNovelDTO(
                 novel.getId(),
                 novel.getTitle(),
                 novel.getCoverImageUrl(),
                 novel.getViewCount(),
-                0,
-                false
+                favoriteCount,
+                isFavorited
         );
         PaginationInfoDTO expectedPagination = new PaginationInfoDTO(page, size, totalItems, totalPages);
         PaginationWithDataDTO<MemberBookmarkedNovelDTO> expectedResult = PaginationWithDataDTO.of(expectedPagination, "novels", List.of(expectedBookmarkDTO));
@@ -72,6 +78,8 @@ public class MemberServiceTest {
         // When
         bookmarkPage = new PageImpl<>(Collections.singletonList(bookmark));
         when(bookmarkRepository.findByMemberIdWithNovel(any(), any(PageRequest.class))).thenReturn(bookmarkPage);
+        when(favoriteRepository.countByNovelId(any())).thenReturn(favoriteCount);
+        when(favoriteRepository.existsByNovelIdAndMemberId(any(), any())).thenReturn(isFavorited);
         PaginationWithDataDTO<MemberBookmarkedNovelDTO> result = memberService.getMemberBookmarkedNovels(memberId, page, size);
 
         // Then
@@ -88,8 +96,12 @@ public class MemberServiceTest {
         assertEquals(totalItems, bookmarks.size());
 
         MemberBookmarkedNovelDTO bookmarkDTO = bookmarks.get(0);
-        assertEquals(novel.getId(), bookmarkDTO.id());
-        assertEquals(novel.getTitle(), bookmarkDTO.title());
+        assertAll(
+                () -> assertEquals(novel.getId(), bookmarkDTO.id()),
+                () -> assertEquals(novel.getTitle(), bookmarkDTO.title()),
+                () -> assertEquals(favoriteCount, bookmarkDTO.favoriteCount()),
+                () -> assertEquals(isFavorited, bookmarkDTO.isFavorited())
+        );
     }
     
 

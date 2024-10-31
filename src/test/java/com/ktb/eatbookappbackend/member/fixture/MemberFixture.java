@@ -13,6 +13,8 @@ public class MemberFixture {
     public static final int SIZE = 10;
     public static final int TOTAL_ITEMS = 1;
     public static final int TOTAL_PAGES = 1;
+    public static final int FAVORITE_COUNT = 5;
+    public static final boolean IS_FAVORITED = true;
 
     public static final int EMPTY_TOTAL_ITEMS = 0;
     public static final int EMPTY_TOTAL_PAGES = 1;
