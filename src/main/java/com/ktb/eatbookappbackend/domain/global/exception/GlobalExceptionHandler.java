@@ -1,6 +1,6 @@
 package com.ktb.eatbookappbackend.domain.global.exception;
 
-import com.ktb.eatbookappbackend.domain.global.message.MessageCode;
+import com.ktb.eatbookappbackend.domain.global.message.GlobalErrorMessage;
 import com.ktb.eatbookappbackend.domain.global.reponse.FailureResponseDTO;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +23,6 @@ public class GlobalExceptionHandler {
         MethodArgumentTypeMismatchException.class})
     public ResponseEntity<FailureResponseDTO> handleValidationExceptions(Exception e) {
         return ResponseEntity.badRequest()
-            .body(FailureResponseDTO.of(MessageCode.GlobalErrorMessage.INVALID_QUERY_PARAMETER));
+            .body(FailureResponseDTO.of(GlobalErrorMessage.INVALID_QUERY_PARAMETER));
     }
 }
