@@ -1,5 +1,11 @@
 package com.ktb.eatbookappbackend.member.service;
 
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+
 import com.ktb.eatbookappbackend.domain.bookmark.repository.BookmarkRepository;
 import com.ktb.eatbookappbackend.domain.favorite.repository.FavoriteRepository;
 import com.ktb.eatbookappbackend.domain.global.dto.PaginationInfoDTO;
@@ -11,6 +17,8 @@ import com.ktb.eatbookappbackend.entity.Member;
 import com.ktb.eatbookappbackend.entity.Novel;
 import com.ktb.eatbookappbackend.member.fixture.MemberFixture;
 import com.ktb.eatbookappbackend.novel.fixture.NovelFixture;
+import java.util.Collections;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,14 +28,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
-
-import java.util.Collections;
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class MemberServiceTest {
@@ -65,21 +65,23 @@ public class MemberServiceTest {
 
         NovelDTO expectedBookmarkDTO = NovelDTO.of(novel, favoriteCount);
         PaginationInfoDTO expectedPagination = PaginationInfoDTO.of(page, size, totalItems, totalPages);
-        PaginationWithDataDTO<NovelDTO> expectedResult = PaginationWithDataDTO.of(expectedPagination, "novels", List.of(expectedBookmarkDTO));
+        PaginationWithDataDTO<NovelDTO> expectedResult = PaginationWithDataDTO.of(expectedPagination, "novels",
+            List.of(expectedBookmarkDTO));
 
-        // When
         bookmarkPage = new PageImpl<>(Collections.singletonList(bookmark));
         when(bookmarkRepository.findByMemberIdWithNovel(any(), any(PageRequest.class))).thenReturn(bookmarkPage);
         when(favoriteRepository.countByNovelId(any())).thenReturn(favoriteCount);
+
+        // When
         PaginationWithDataDTO<NovelDTO> result = memberService.getMemberBookmarkedNovels(memberId, page, size);
 
         // Then
         assertNotNull(result);
         assertAll(
-                () -> assertEquals(expectedResult.pagination().currentPage(), result.pagination().currentPage()),
-                () -> assertEquals(expectedResult.pagination().pageSize(), result.pagination().pageSize()),
-                () -> assertEquals(expectedResult.pagination().totalItems(), result.pagination().totalItems()),
-                () -> assertEquals(expectedResult.pagination().totalPages(), result.pagination().totalPages())
+            () -> assertEquals(expectedResult.pagination().currentPage(), result.pagination().currentPage()),
+            () -> assertEquals(expectedResult.pagination().pageSize(), result.pagination().pageSize()),
+            () -> assertEquals(expectedResult.pagination().totalItems(), result.pagination().totalItems()),
+            () -> assertEquals(expectedResult.pagination().totalPages(), result.pagination().totalPages())
         );
 
         List<NovelDTO> bookmarks = result.data().get("novels");
@@ -88,12 +90,11 @@ public class MemberServiceTest {
 
         NovelDTO bookmarkDTO = bookmarks.get(0);
         assertAll(
-                () -> assertEquals(novel.getId(), bookmarkDTO.id()),
-                () -> assertEquals(novel.getTitle(), bookmarkDTO.title()),
-                () -> assertEquals(favoriteCount, bookmarkDTO.favoriteCount())
+            () -> assertEquals(novel.getId(), bookmarkDTO.id()),
+            () -> assertEquals(novel.getTitle(), bookmarkDTO.title()),
+            () -> assertEquals(favoriteCount, bookmarkDTO.favoriteCount())
         );
     }
-    
 
     @Test
     public void should_ReturnEmptyResult_When_NoBookmarks() {
@@ -107,17 +108,18 @@ public class MemberServiceTest {
         PaginationInfoDTO expectedPagination = PaginationInfoDTO.of(page, size, totalItems, totalPages);
         PaginationWithDataDTO<NovelDTO> expectedResult = PaginationWithDataDTO.of(expectedPagination, "novels", Collections.emptyList());
 
-        // When
         when(bookmarkRepository.findByMemberIdWithNovel(any(), any(PageRequest.class))).thenReturn(new PageImpl<>(Collections.emptyList()));
+
+        // When
         PaginationWithDataDTO<NovelDTO> result = memberService.getMemberBookmarkedNovels(memberId, page, size);
 
         // Then
         assertNotNull(result);
         assertAll(
-                () -> assertEquals(expectedResult.pagination().currentPage(), result.pagination().currentPage()),
-                () -> assertEquals(expectedResult.pagination().pageSize(), result.pagination().pageSize()),
-                () -> assertEquals(expectedResult.pagination().totalItems(), result.pagination().totalItems()),
-                () -> assertEquals(expectedResult.pagination().totalPages(), result.pagination().totalPages())
+            () -> assertEquals(expectedResult.pagination().currentPage(), result.pagination().currentPage()),
+            () -> assertEquals(expectedResult.pagination().pageSize(), result.pagination().pageSize()),
+            () -> assertEquals(expectedResult.pagination().totalItems(), result.pagination().totalItems()),
+            () -> assertEquals(expectedResult.pagination().totalPages(), result.pagination().totalPages())
         );
         assertEquals(Collections.emptyList(), result.data().get("novels"));
     }
