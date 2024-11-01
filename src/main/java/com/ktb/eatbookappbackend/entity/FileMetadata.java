@@ -1,6 +1,5 @@
 package com.ktb.eatbookappbackend.entity;
 
-
 import com.ktb.eatbookappbackend.entity.base.BaseEntity;
 import com.ktb.eatbookappbackend.entity.constant.FileType;
 import jakarta.persistence.*;
@@ -33,7 +32,6 @@ public class FileMetadata extends BaseEntity {
     @Column(nullable = false)
     private String path;
 
-    @Id
     @NotNull
     @ManyToOne
     @OnDelete(action = OnDeleteAction.CASCADE)
@@ -49,8 +47,12 @@ public class FileMetadata extends BaseEntity {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         FileMetadata that = (FileMetadata) o;
         return Objects.equals(id, that.id);
     }

@@ -14,9 +14,15 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler({ MissingServletRequestParameterException.class, ConstraintViolationException.class, MethodArgumentNotValidException.class, BindException.class, MethodArgumentTypeMismatchException.class })
+    @ExceptionHandler({
+        MethodArgumentTypeMismatchException.class,
+        MissingServletRequestParameterException.class,
+        ConstraintViolationException.class,
+        MethodArgumentNotValidException.class,
+        BindException.class,
+        MethodArgumentTypeMismatchException.class})
     public ResponseEntity<FailureResponseDTO> handleValidationExceptions(Exception e) {
         return ResponseEntity.badRequest()
-                .body(FailureResponseDTO.of(MessageCode.GlobalErrorMessage.INVALID_QUERY_PARAMETER));
+            .body(FailureResponseDTO.of(MessageCode.GlobalErrorMessage.INVALID_QUERY_PARAMETER));
     }
 }
