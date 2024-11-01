@@ -19,7 +19,7 @@ public record NovelDTO(
         int favoriteCount
 ) {
 
-    public static NovelDTO of(final Novel novel, int favoriteCount) {
+    public static NovelDTO of(final Novel novel, final int favoriteCount) {
         return new NovelDTO(
                 novel.getId(),
                 novel.getTitle(),

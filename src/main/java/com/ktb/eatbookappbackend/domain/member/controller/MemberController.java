@@ -6,9 +6,9 @@ import com.ktb.eatbookappbackend.domain.global.dto.PaginationWithDataDTO;
 import com.ktb.eatbookappbackend.domain.global.message.MessageCode;
 import com.ktb.eatbookappbackend.domain.global.reponse.FailureResponseDTO;
 import com.ktb.eatbookappbackend.domain.global.reponse.SuccessResponseDTO;
-import com.ktb.eatbookappbackend.domain.member.dto.MemberBookmarkedNovelDTO;
 import com.ktb.eatbookappbackend.domain.member.message.MemberSuccessCode;
 import com.ktb.eatbookappbackend.domain.member.service.MemberService;
+import com.ktb.eatbookappbackend.domain.novel.dto.NovelDTO;
 import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -43,7 +43,7 @@ public class MemberController {
     public ResponseEntity<?> getMemberBookmarkedNovels(@RequestParam(name = "page") @Min(1) final int page,
                                                        @RequestParam(name = "size") @Min(1) final int size) {
         String memberId = AuthenticationAspect.getAuthenticatedMemberId();
-        PaginationWithDataDTO<MemberBookmarkedNovelDTO> bookmarkedNovels = memberService.getMemberBookmarkedNovels(memberId, page, size);
+        PaginationWithDataDTO<NovelDTO> bookmarkedNovels = memberService.getMemberBookmarkedNovels(memberId, page, size);
         if (page - 1 > bookmarkedNovels.pagination().totalPages()) {
             return ResponseEntity.badRequest()
                     .body(FailureResponseDTO.of(MessageCode.GlobalErrorMessage.INVALID_QUERY_PARAMETER));
