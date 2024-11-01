@@ -11,7 +11,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,8 +25,8 @@ public class MemberService {
      * 특정 멤버가 북마크한 소설 목록을 페이지로 나누어 반환합니다.
      *
      * @param memberId 멤버의 고유 식별자.
-     * @param page 검색할 페이지 번호.
-     * @param size 페이지 당 항목 수.
+     * @param page     검색할 페이지 번호.
+     * @param size     페이지 당 항목 수.
      * @return {@link PaginationWithDataDTO} 페이지네이션 정보와 북마크된 소설 목록을 담고 있는 객체.
      */
     public PaginationWithDataDTO<NovelDTO> getMemberBookmarkedNovels(String memberId, int page, int size) {
@@ -35,19 +34,19 @@ public class MemberService {
         Page<Bookmark> bookmarkPage = bookmarkRepository.findByMemberIdWithNovel(memberId, pageRequest);
 
         PaginationInfoDTO paginationInfo = PaginationInfoDTO.of(
-                page,
-                size,
-                (int) bookmarkPage.getTotalElements(),
-                bookmarkPage.getTotalPages()
+            page,
+            size,
+            (int) bookmarkPage.getTotalElements(),
+            bookmarkPage.getTotalPages()
         );
 
         List<NovelDTO> bookmarks = bookmarkPage.getContent().stream()
-                .map(bookmark -> {
-                    Novel novel = bookmark.getNovel();
-                    int favoriteCount = favoriteRepository.countByNovelId(novel.getId());
-                    return NovelDTO.of(bookmark.getNovel(), favoriteCount);
-                })
-                .collect(Collectors.toList());
+            .map(bookmark -> {
+                Novel novel = bookmark.getNovel();
+                int favoriteCount = favoriteRepository.countByNovelId(novel.getId());
+                return NovelDTO.of(bookmark.getNovel(), favoriteCount);
+            })
+            .collect(Collectors.toList());
 
         return PaginationWithDataDTO.of(paginationInfo, "novels", bookmarks);
     }
