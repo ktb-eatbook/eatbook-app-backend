@@ -10,6 +10,7 @@ import com.ktb.eatbookappbackend.entity.Bookmark;
 import com.ktb.eatbookappbackend.entity.Member;
 import com.ktb.eatbookappbackend.entity.Novel;
 import com.ktb.eatbookappbackend.member.fixture.MemberFixture;
+import com.ktb.eatbookappbackend.novel.fixture.NovelFixture;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -48,7 +49,7 @@ public class MemberServiceTest {
     @BeforeEach
     public void setUp() {
         member = MemberFixture.createMember();
-        novel = MemberFixture.createNovel();
+        novel = NovelFixture.createNovel();
         bookmark = MemberFixture.createBookmark(novel, member);
     }
 
