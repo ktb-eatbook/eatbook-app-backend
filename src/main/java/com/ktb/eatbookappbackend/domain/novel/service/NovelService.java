@@ -63,7 +63,7 @@ public class NovelService {
             sort = Sort.by(Sort.Direction.ASC, "releasedDate");
         }
 
-        List<Episode> episodes = novelRepository.findEpisodesByNovelId(novelId, sort);
+        List<Episode> episodes = novelRepository.findPublicEpisodesByNovelId(novelId, sort);
         return episodes.stream()
             .map(episode -> {
                 boolean ttsAvailable = fileMetaDataRepository.existsByEpisodeIdAndType(episode.getId(), FileType.TTS);
