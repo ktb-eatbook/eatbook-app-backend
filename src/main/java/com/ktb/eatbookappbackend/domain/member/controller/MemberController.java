@@ -4,6 +4,7 @@ import com.ktb.eatbookappbackend.domain.global.authentication.Authenticated;
 import com.ktb.eatbookappbackend.domain.global.authentication.AuthenticationAspect;
 import com.ktb.eatbookappbackend.domain.global.dto.PaginationWithDataDTO;
 import com.ktb.eatbookappbackend.domain.global.message.GlobalErrorMessage;
+import com.ktb.eatbookappbackend.domain.global.message.GlobalSuccessMessage;
 import com.ktb.eatbookappbackend.domain.global.reponse.FailureResponseDTO;
 import com.ktb.eatbookappbackend.domain.global.reponse.SuccessResponseDTO;
 import com.ktb.eatbookappbackend.domain.member.message.MemberSuccessCode;
@@ -47,7 +48,7 @@ public class MemberController {
         }
 
         if (bookmarkedNovels.data().get("novels").isEmpty()) {
-            return ResponseEntity.ok(SuccessResponseDTO.of(MemberSuccessCode.NO_RESULTS_FOUND, bookmarkedNovels));
+            return ResponseEntity.ok(SuccessResponseDTO.of(GlobalSuccessMessage.NO_RESULTS_FOUND, bookmarkedNovels));
         }
 
         return ResponseEntity.ok(SuccessResponseDTO.of(MemberSuccessCode.BOOKMARKS_RETRIEVED, bookmarkedNovels));
