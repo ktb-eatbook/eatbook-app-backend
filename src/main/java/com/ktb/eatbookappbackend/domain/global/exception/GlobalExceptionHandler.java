@@ -21,7 +21,7 @@ public class GlobalExceptionHandler {
         MethodArgumentNotValidException.class,
         BindException.class,
         MethodArgumentTypeMismatchException.class})
-    public ResponseEntity<FailureResponseDTO> handleValidationExceptions(Exception e) {
+    protected ResponseEntity<FailureResponseDTO> handleValidationExceptions(Exception e) {
         return ResponseEntity.badRequest()
             .body(FailureResponseDTO.of(GlobalErrorMessage.INVALID_QUERY_PARAMETER));
     }
