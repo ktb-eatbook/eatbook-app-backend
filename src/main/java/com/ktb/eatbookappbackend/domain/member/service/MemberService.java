@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Service
@@ -29,6 +30,7 @@ public class MemberService {
      * @param size     페이지 당 항목 수.
      * @return {@link BookmarkedNovelsPaginationDTO} 페이지네이션 정보와 북마크된 소설 목록을 담고 있는 객체.
      */
+    @Transactional(readOnly = true)
     public BookmarkedNovelsPaginationDTO getMemberBookmarkedNovels(String memberId, int page, int size) {
         PageRequest pageRequest = PageRequest.of(page - 1, size);
         Page<Bookmark> bookmarkPage = bookmarkRepository.findByMemberIdWithNovel(memberId, pageRequest);
