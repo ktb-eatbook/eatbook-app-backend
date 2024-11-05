@@ -4,8 +4,12 @@ import com.ktb.eatbookappbackend.domain.bookmark.repository.BookmarkRepository;
 import com.ktb.eatbookappbackend.domain.favorite.repository.FavoriteRepository;
 import com.ktb.eatbookappbackend.domain.global.dto.PaginationInfoDTO;
 import com.ktb.eatbookappbackend.domain.member.dto.BookmarkedNovelsPaginationDTO;
+import com.ktb.eatbookappbackend.domain.member.exception.MemberException;
+import com.ktb.eatbookappbackend.domain.member.message.MemberErrorCode;
+import com.ktb.eatbookappbackend.domain.member.repository.MemberRepository;
 import com.ktb.eatbookappbackend.domain.novel.dto.NovelDTO;
 import com.ktb.eatbookappbackend.entity.Bookmark;
+import com.ktb.eatbookappbackend.entity.Member;
 import com.ktb.eatbookappbackend.entity.Novel;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -19,8 +23,15 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class MemberService {
 
+    private final MemberRepository memberRepository;
     private final BookmarkRepository bookmarkRepository;
     private final FavoriteRepository favoriteRepository;
+
+    @Transactional(readOnly = true)
+    public Member findById(String memberId) {
+        return memberRepository.findById(memberId)
+            .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND));
+    }
 
     /**
      * 특정 멤버가 북마크한 소설 목록을 페이지로 나누어 반환합니다.
