@@ -96,8 +96,8 @@ public class NovelService {
         Novel novel = findById(novelId);
         Member member = memberService.findById(memberId);
 
-        boolean bookmarkExists = bookmarkRepository.existsByNovelAndMember(novel, member);
-        if (bookmarkExists) {
+        boolean isBookmarkExists = bookmarkRepository.existsByNovelAndMember(novel, member);
+        if (isBookmarkExists) {
             throw new NovelException(NovelErrorCode.ALREADY_BOOKMARKED);
         }
 
