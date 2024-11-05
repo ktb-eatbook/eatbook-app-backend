@@ -12,6 +12,7 @@ import com.ktb.eatbookappbackend.domain.novel.message.NovelErrorCode;
 import com.ktb.eatbookappbackend.domain.novel.repository.NovelRepository;
 import com.ktb.eatbookappbackend.entity.Bookmark;
 import com.ktb.eatbookappbackend.entity.Episode;
+import com.ktb.eatbookappbackend.entity.Favorite;
 import com.ktb.eatbookappbackend.entity.Member;
 import com.ktb.eatbookappbackend.entity.Novel;
 import com.ktb.eatbookappbackend.entity.constant.EpisodeSortOrder;
@@ -123,5 +124,32 @@ public class NovelService {
             .orElseThrow(() -> new NovelException(NovelErrorCode.BOOKMARK_NOT_FOUND));
 
         bookmarkRepository.delete(bookmark);
+    }
+
+    @Transactional
+    public void addFavorite(String novelId, String memberId) {
+        Novel novel = findById(novelId);
+        Member member = memberService.findById(memberId);
+
+        boolean isFavoriteExists = favoriteRepository.existsByNovelIdAndMemberId(novel.getId(), member.getId());
+        if (isFavoriteExists) {
+            throw new NovelException(NovelErrorCode.ALREADY_FAVORITE);
+        }
+
+        Favorite favorite = Favorite.builder()
+            .novel(novel)
+            .member(member)
+            .build();
+        favoriteRepository.save(favorite);
+    }
+
+    @Transactional
+    public void deleteFavorite(String novelId, String memberId) {
+        Novel novel = findById(novelId);
+        Member member = memberService.findById(memberId);
+        Favorite favorite = favoriteRepository.findByNovelAndMember(novel, member)
+            .orElseThrow(() -> new NovelException(NovelErrorCode.FAVORITE_NOT_FOUND));
+
+        favoriteRepository.delete(favorite);
     }
 }

@@ -11,25 +11,29 @@ import java.util.Objects;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class FavoriteId {
 
-    private String novelId;
-    private String memberId;
+    private String novel;
+    private String member;
 
     @Builder
     public FavoriteId(String novelId, String memberId) {
-        this.novelId = novelId;
-        this.memberId = memberId;
+        this.novel = novelId;
+        this.member = memberId;
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         FavoriteId that = (FavoriteId) o;
-        return Objects.equals(novelId, that.novelId) && Objects.equals(memberId, that.memberId);
+        return Objects.equals(novel, that.novel) && Objects.equals(member, that.member);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(novelId, memberId);
+        return Objects.hash(novel, member);
     }
 }

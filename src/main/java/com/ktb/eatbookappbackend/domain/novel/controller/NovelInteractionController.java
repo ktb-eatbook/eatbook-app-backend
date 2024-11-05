@@ -51,4 +51,20 @@ public class NovelInteractionController {
         novelService.deleteBookmark(novelId, memberId);
         return SuccessResponse.toResponseEntity(NovelSuccessCode.BOOKMARK_DELETED);
     }
+
+    @Authenticated
+    @PostMapping("{novelId}/favorite")
+    public ResponseEntity<?> addFavorite(@PathVariable("novelId") final String novelId) {
+        String memberId = AuthenticationAspect.getAuthenticatedMemberId();
+        novelService.addFavorite(novelId, memberId);
+        return SuccessResponse.toResponseEntity(NovelSuccessCode.FAVORITE_ADDED);
+    }
+
+    @Authenticated
+    @DeleteMapping("{novelId}/favorite")
+    public ResponseEntity<?> deleteFavorite(@PathVariable("novelId") final String novelId) {
+        String memberId = AuthenticationAspect.getAuthenticatedMemberId();
+        novelService.deleteFavorite(novelId, memberId);
+        return SuccessResponse.toResponseEntity(NovelSuccessCode.FAVORITE_DELETED);
+    }
 }
