@@ -86,7 +86,7 @@ public class NovelService {
     }
 
     /**
-     * 특정 소설과 멤버에 대한 북마크를 추가합니다.
+     * 특정 멤버가 특정 소설에 북마크를 추가합니다.
      *
      * @param novelId  북마크할 소설의 고유 식별자
      * @param memberId 북마크를 추가할 멤버의 고유 식별자
@@ -110,7 +110,7 @@ public class NovelService {
     }
 
     /**
-     * 특정 소설과 멤버에 대한 북마크를 삭제합니다.
+     * 특정 멤버가 특정 소설에 북마크를 삭제합니다.
      *
      * @param novelId  북마크를 삭제할 소설의 고유 식별자
      * @param memberId 북마크를 소유하는 멤버의 고유 식별자
@@ -126,6 +126,13 @@ public class NovelService {
         bookmarkRepository.delete(bookmark);
     }
 
+    /**
+     * 특정 멤버가 특정 소설에 좋아요를 추가합니다.
+     *
+     * @param novelId  즐겨찾기를 추가할 소설의 고유 식별자.
+     * @param memberId 즐겨찾기를 추가하는 멤버의 고유 식별자.
+     * @throws NovelException 지정된 소설과 멤버가 이미 즐겨찾기를 가지고 있는 경우, 예외가 발생하고 {@link NovelErrorCode#ALREADY_FAVORITE}가 전달됩니다.
+     */
     @Transactional
     public void addFavorite(String novelId, String memberId) {
         Novel novel = findById(novelId);
@@ -143,6 +150,13 @@ public class NovelService {
         favoriteRepository.save(favorite);
     }
 
+    /**
+     * 특정 멤버가 특정 소설에 좋아요를 삭제합니다.
+     *
+     * @param novelId  즐겨찾기를 삭제할 소설의 고유 식별자.
+     * @param memberId 즐겨찾기를 삭제하는 멤버의 고유 식별자.
+     * @throws NovelException 지정된 소설과 멤버가 즐겨찾기를 가지고 있지 않는 경우, 예외가 발생하고 {@link NovelErrorCode#FAVORITE_NOT_FOUND}가 전달됩니다.
+     */
     @Transactional
     public void deleteFavorite(String novelId, String memberId) {
         Novel novel = findById(novelId);
