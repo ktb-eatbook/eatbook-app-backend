@@ -138,7 +138,7 @@ public class NovelService {
         Novel novel = findById(novelId);
         Member member = memberService.findById(memberId);
 
-        boolean isFavoriteExists = favoriteRepository.existsByNovelIdAndMemberId(novel.getId(), member.getId());
+        boolean isFavoriteExists = favoriteRepository.existsByNovelAndMember(novel, member);
         if (isFavoriteExists) {
             throw new NovelException(NovelErrorCode.ALREADY_FAVORITE);
         }
