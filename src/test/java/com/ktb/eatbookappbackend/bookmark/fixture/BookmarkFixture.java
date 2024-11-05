@@ -1,4 +1,4 @@
-package com.ktb.eatbookappbackend.novelBookmark.fixture;
+package com.ktb.eatbookappbackend.bookmark.fixture;
 
 import com.ktb.eatbookappbackend.entity.Bookmark;
 import com.ktb.eatbookappbackend.entity.Member;
