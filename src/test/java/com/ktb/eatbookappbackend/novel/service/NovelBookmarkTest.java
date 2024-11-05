@@ -9,7 +9,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.ktb.eatbookappbackend.Bookmark.fixture.BookmarkFixture;
+import com.ktb.eatbookappbackend.novelBookmark.fixture.BookmarkFixture;
 import com.ktb.eatbookappbackend.domain.bookmark.repository.BookmarkRepository;
 import com.ktb.eatbookappbackend.domain.member.service.MemberService;
 import com.ktb.eatbookappbackend.domain.novel.exception.NovelException;
