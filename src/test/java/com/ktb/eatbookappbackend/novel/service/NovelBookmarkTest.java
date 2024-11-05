@@ -93,8 +93,6 @@ public class NovelBookmarkTest {
     @Test
     public void should_DeleteBookmark_When_BookmarkExists() {
         // Given
-        String memberId = member.getId();
-        String novelId = novel.getId();
         Bookmark bookmark = Bookmark.builder().novel(novel).member(member).build();
 
         when(bookmarkRepository.findByNovelAndMember(novel, member)).thenReturn(Optional.of(bookmark));
