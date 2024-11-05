@@ -84,6 +84,13 @@ public class NovelService {
             .toList();
     }
 
+    /**
+     * 특정 소설과 멤버에 대한 북마크를 추가합니다.
+     *
+     * @param novelId  북마크할 소설의 고유 식별자
+     * @param memberId 북마크를 추가할 멤버의 고유 식별자
+     * @throws NovelException 지정된 소설과 멤버에 이미 북마크가 존재하는 경우, 예외가 발생하고 {@link NovelErrorCode#ALREADY_BOOKMARKED}가 전달됩니다.
+     */
     @Transactional
     public void addBookmark(String novelId, String memberId) {
         Novel novel = findById(novelId);
@@ -101,6 +108,13 @@ public class NovelService {
         bookmarkRepository.save(bookmark);
     }
 
+    /**
+     * 특정 소설과 멤버에 대한 북마크를 삭제합니다.
+     *
+     * @param novelId  북마크를 삭제할 소설의 고유 식별자
+     * @param memberId 북마크를 소유하는 멤버의 고유 식별자
+     * @throws NovelException 지정된 소설과 멤버에 북마크가 없는 경우, 예외가 발생하고 {@link NovelErrorCode#BOOKMARK_NOT_FOUND}가 전달됩니다.
+     */
     @Transactional
     public void deleteBookmark(String novelId, String memberId) {
         Novel novel = findById(novelId);
