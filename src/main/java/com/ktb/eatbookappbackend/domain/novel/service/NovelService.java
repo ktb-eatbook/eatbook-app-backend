@@ -1,14 +1,18 @@
 package com.ktb.eatbookappbackend.domain.novel.service;
 
+import com.ktb.eatbookappbackend.domain.bookmark.repository.BookmarkRepository;
 import com.ktb.eatbookappbackend.domain.comment.repository.CommentRepository;
 import com.ktb.eatbookappbackend.domain.episode.dto.EpisodeDTO;
 import com.ktb.eatbookappbackend.domain.favorite.repository.FavoriteRepository;
 import com.ktb.eatbookappbackend.domain.fileMetaData.repository.FileMetaDataRepository;
+import com.ktb.eatbookappbackend.domain.member.service.MemberService;
 import com.ktb.eatbookappbackend.domain.novel.dto.NovelDTO;
 import com.ktb.eatbookappbackend.domain.novel.exception.NovelException;
 import com.ktb.eatbookappbackend.domain.novel.message.NovelErrorCode;
 import com.ktb.eatbookappbackend.domain.novel.repository.NovelRepository;
+import com.ktb.eatbookappbackend.entity.Bookmark;
 import com.ktb.eatbookappbackend.entity.Episode;
+import com.ktb.eatbookappbackend.entity.Member;
 import com.ktb.eatbookappbackend.entity.Novel;
 import com.ktb.eatbookappbackend.entity.constant.EpisodeSortOrder;
 import com.ktb.eatbookappbackend.entity.constant.FileType;
@@ -26,6 +30,8 @@ public class NovelService {
     private final FavoriteRepository favoriteRepository;
     private final FileMetaDataRepository fileMetaDataRepository;
     private final CommentRepository commentRepository;
+    private final MemberService memberService;
+    private final BookmarkRepository bookmarkRepository;
 
     /**
      * 고유 식별자로 소설을 찾습니다.
@@ -76,5 +82,22 @@ public class NovelService {
                 return EpisodeDTO.of(episode, ttsAvailable, scriptAvailable, commentCount);
             })
             .toList();
+    }
+
+    @Transactional
+    public void addBookmark(String novelId, String memberId) {
+        Novel novel = findById(novelId);
+        Member member = memberService.findById(memberId);
+
+        boolean bookmarkExists = bookmarkRepository.existsByNovelAndMember(novel, member);
+        if (bookmarkExists) {
+            throw new NovelException(NovelErrorCode.ALREADY_BOOKMARKED);
+        }
+
+        Bookmark bookmark = Bookmark.builder()
+            .novel(novel)
+            .member(member)
+            .build();
+        bookmarkRepository.save(bookmark);
     }
 }
