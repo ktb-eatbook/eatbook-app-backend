@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
+import com.ktb.eatbookappbackend.Bookmark.fixture.BookmarkFixture;
 import com.ktb.eatbookappbackend.domain.bookmark.repository.BookmarkRepository;
 import com.ktb.eatbookappbackend.domain.favorite.repository.FavoriteRepository;
 import com.ktb.eatbookappbackend.domain.global.dto.PaginationInfoDTO;
@@ -50,7 +51,7 @@ public class MemberServiceTest {
     public void setUp() {
         member = MemberFixture.createMember();
         novel = NovelFixture.createNovel();
-        bookmark = MemberFixture.createBookmark(novel, member);
+        bookmark = BookmarkFixture.createBookmark(member, novel);
     }
 
     @Test
