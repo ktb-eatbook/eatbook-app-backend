@@ -3,6 +3,7 @@ package com.ktb.eatbookappbackend.domain.bookmark.repository;
 import com.ktb.eatbookappbackend.entity.Bookmark;
 import com.ktb.eatbookappbackend.entity.Member;
 import com.ktb.eatbookappbackend.entity.Novel;
+import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -16,4 +17,6 @@ public interface BookmarkRepository extends JpaRepository<Bookmark, Long> {
     Page<Bookmark> findByMemberIdWithNovel(@Param("memberId") String memberId, Pageable pageable);
 
     boolean existsByNovelAndMember(Novel novel, Member member);
+
+    Optional<Bookmark> findByNovelAndMember(Novel novel, Member member);
 }

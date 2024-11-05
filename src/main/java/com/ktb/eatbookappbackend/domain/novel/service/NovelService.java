@@ -100,4 +100,14 @@ public class NovelService {
             .build();
         bookmarkRepository.save(bookmark);
     }
+
+    @Transactional
+    public void deleteBookmark(String novelId, String memberId) {
+        Novel novel = findById(novelId);
+        Member member = memberService.findById(memberId);
+        Bookmark bookmark = bookmarkRepository.findByNovelAndMember(novel, member)
+            .orElseThrow(() -> new NovelException(NovelErrorCode.BOOKMARK_NOT_FOUND));
+
+        bookmarkRepository.delete(bookmark);
+    }
 }
