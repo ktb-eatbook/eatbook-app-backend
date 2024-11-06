@@ -8,8 +8,6 @@ import com.ktb.eatbookappbackend.domain.member.dto.BookmarkedNovelsPaginationDTO
 import com.ktb.eatbookappbackend.domain.member.message.MemberSuccessCode;
 import com.ktb.eatbookappbackend.domain.member.service.MemberService;
 import jakarta.validation.constraints.Min;
-import java.util.HashMap;
-import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -41,15 +39,10 @@ public class MemberController {
         @RequestParam(name = "size") @Min(1) final int size) {
         String memberId = AuthenticationAspect.getAuthenticatedMemberId();
         BookmarkedNovelsPaginationDTO bookmarkedNovels = memberService.getMemberBookmarkedNovels(memberId, page, size);
-
-        Map<String, Object> data = new HashMap<>();
-        data.put("pagination", bookmarkedNovels.pagination());
-        data.put("bookmarkedNovels", bookmarkedNovels.bookmarkedNovels());
-
         if (bookmarkedNovels.bookmarkedNovels().isEmpty()) {
-            return ResponseEntity.ok(SuccessResponseDTO.of(GlobalSuccessMessage.NO_RESULTS_FOUND, data));
+            return ResponseEntity.ok(SuccessResponseDTO.of(GlobalSuccessMessage.NO_RESULTS_FOUND, bookmarkedNovels));
         }
 
-        return ResponseEntity.ok(SuccessResponseDTO.of(MemberSuccessCode.BOOKMARKS_RETRIEVED, data));
+        return ResponseEntity.ok(SuccessResponseDTO.of(MemberSuccessCode.BOOKMARKS_RETRIEVED, bookmarkedNovels));
     }
 }
