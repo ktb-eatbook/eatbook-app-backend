@@ -1,6 +1,6 @@
 package com.ktb.eatbookappbackend.domain.global.authentication;
 
-import com.ktb.eatbookappbackend.domain.global.message.MessageCode;
+import com.ktb.eatbookappbackend.domain.global.message.GlobalErrorMessage;
 import com.ktb.eatbookappbackend.domain.global.reponse.FailureResponseDTO;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -9,12 +9,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 /**
- * 특정 메서드에 접근하기 전에 사용자가 인증되었는지 확인하는 Aspect입니다.
- * 또한 인증된 멤버의 ID를 가져오는 방법을 제공합니다.
+ * 특정 메서드에 접근하기 전에 사용자가 인증되었는지 확인하는 Aspect입니다. 또한 인증된 멤버의 ID를 가져오는 방법을 제공합니다.
  */
 @Aspect
 @Component
 public class AuthenticationAspect {
+
     private static final ThreadLocal<String> memberIdThreadLocal = new ThreadLocal<>();
 
     private final String fixedMemberId = "00bc7946-f8ad-4076-805f-8c8346b339a8";
@@ -26,7 +26,7 @@ public class AuthenticationAspect {
     public Object checkAuthentication(ProceedingJoinPoint joinPoint, Authenticated authenticated) throws Throwable {
         boolean isAuthenticated = isUserAuthenticated();
         if (!isAuthenticated) {
-            return ResponseEntity.status(401).body(FailureResponseDTO.of(MessageCode.GlobalErrorMessage.UNAUTHORIZED_ACCESS));
+            return ResponseEntity.status(401).body(FailureResponseDTO.of(GlobalErrorMessage.UNAUTHORIZED_ACCESS));
         }
 
         memberIdThreadLocal.set(fixedMemberId);
