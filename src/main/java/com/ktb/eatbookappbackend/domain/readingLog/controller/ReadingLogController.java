@@ -7,8 +7,6 @@ import com.ktb.eatbookappbackend.domain.global.reponse.SuccessResponseDTO;
 import com.ktb.eatbookappbackend.domain.novel.dto.ContinueReadingInfoDTO;
 import com.ktb.eatbookappbackend.domain.readingLog.message.ReadingLogSuccessCode;
 import com.ktb.eatbookappbackend.domain.readingLog.service.ReadingLogService;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -37,14 +35,12 @@ public class ReadingLogController {
     public ResponseEntity<?> getLastReadEpisode(@PathVariable("novelId") String novelId) {
         String memberId = AuthenticationAspect.getAuthenticatedMemberId();
 
-        Optional<ContinueReadingInfoDTO> lastReadEpisodeOpt = readingLogService.getLastReadEpisode(memberId, novelId);
+        Optional<ContinueReadingInfoDTO> lastReadEpisode = readingLogService.getLastReadEpisode(memberId, novelId);
 
-        if (lastReadEpisodeOpt.isEmpty()) {
+        if (lastReadEpisode.isEmpty()) {
             return ResponseEntity.ok(SuccessResponseDTO.of(GlobalSuccessMessage.NO_RESULTS_FOUND, null));
         }
 
-        Map<String, Object> data = new HashMap<>();
-        data.put("continueReadingInfo", lastReadEpisodeOpt.get());
-        return ResponseEntity.ok(SuccessResponseDTO.of(ReadingLogSuccessCode.BOOKMARKS_RETRIEVED, data));
+        return ResponseEntity.ok(SuccessResponseDTO.of(ReadingLogSuccessCode.BOOKMARKS_RETRIEVED, lastReadEpisode.get()));
     }
 }

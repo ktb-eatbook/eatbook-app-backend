@@ -25,4 +25,10 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest()
             .body(FailureResponseDTO.of(GlobalErrorMessage.INVALID_QUERY_PARAMETER));
     }
+
+    @ExceptionHandler(GlobalException.class)
+    protected ResponseEntity<FailureResponseDTO> handleGlobalException(GlobalException e) {
+        return ResponseEntity.badRequest()
+            .body(FailureResponseDTO.of(e.getErrorCode()));
+    }
 }

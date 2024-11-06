@@ -11,7 +11,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import jakarta.validation.constraints.NotNull;
-import java.time.LocalTime;
+import java.sql.Time;
 import java.util.Objects;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -33,7 +33,7 @@ public class ReadingLog extends BaseEntity {
     private int pageNumber;
 
     @Column(name = "tts_last_position_seconds", nullable = false)
-    private LocalTime ttsLastPositionSeconds;
+    private Time ttsLastPositionSeconds;
 
     @ManyToOne
     @JoinColumn(name = "member_id", nullable = false)
@@ -51,7 +51,7 @@ public class ReadingLog extends BaseEntity {
     private Episode episode;
 
     @Builder
-    public ReadingLog(int pageNumber, LocalTime ttsLastPositionSeconds, Member member, Novel novel, Episode episode) {
+    public ReadingLog(int pageNumber, Time ttsLastPositionSeconds, Member member, Novel novel, Episode episode) {
         this.pageNumber = pageNumber;
         this.ttsLastPositionSeconds = ttsLastPositionSeconds;
         this.member = member;
