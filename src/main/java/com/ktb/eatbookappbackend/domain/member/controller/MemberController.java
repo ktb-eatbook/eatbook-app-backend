@@ -2,9 +2,7 @@ package com.ktb.eatbookappbackend.domain.member.controller;
 
 import com.ktb.eatbookappbackend.domain.global.authentication.Authenticated;
 import com.ktb.eatbookappbackend.domain.global.authentication.AuthenticationAspect;
-import com.ktb.eatbookappbackend.domain.global.message.GlobalErrorMessage;
 import com.ktb.eatbookappbackend.domain.global.message.GlobalSuccessMessage;
-import com.ktb.eatbookappbackend.domain.global.reponse.FailureResponseDTO;
 import com.ktb.eatbookappbackend.domain.global.reponse.SuccessResponseDTO;
 import com.ktb.eatbookappbackend.domain.member.dto.BookmarkedNovelsPaginationDTO;
 import com.ktb.eatbookappbackend.domain.member.message.MemberSuccessCode;
@@ -43,10 +41,6 @@ public class MemberController {
         @RequestParam(name = "size") @Min(1) final int size) {
         String memberId = AuthenticationAspect.getAuthenticatedMemberId();
         BookmarkedNovelsPaginationDTO bookmarkedNovels = memberService.getMemberBookmarkedNovels(memberId, page, size);
-        if (page - 1 > bookmarkedNovels.pagination().totalPages()) {
-            return ResponseEntity.badRequest()
-                .body(FailureResponseDTO.of(GlobalErrorMessage.INVALID_QUERY_PARAMETER));
-        }
 
         Map<String, Object> data = new HashMap<>();
         data.put("pagination", bookmarkedNovels.pagination());
