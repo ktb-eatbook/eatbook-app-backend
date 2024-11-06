@@ -4,14 +4,14 @@ import com.ktb.eatbookappbackend.entity.Member;
 import com.ktb.eatbookappbackend.entity.Novel;
 import com.ktb.eatbookappbackend.entity.ReadingLog;
 import com.ktb.eatbookappbackend.episode.fixture.EpisodeFixture;
-import java.time.LocalTime;
+import java.sql.Time;
 import java.util.UUID;
 import org.springframework.test.util.ReflectionTestUtils;
 
 public class ReadingLogFixture {
 
     public static final int PAGE_NUMBER = 10;
-    public static final LocalTime TTS_LAST_POSITION_SECONDS = LocalTime.of(12, 34, 56);
+    public static final Time TTS_LAST_POSITION_SECONDS = Time.valueOf("12:34:56");
 
     public static ReadingLog createReadingLog(Member member, Novel novel) {
         ReadingLog readingLog = ReadingLog.builder()

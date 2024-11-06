@@ -1,10 +1,12 @@
 package com.ktb.eatbookappbackend.readingLog.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
 import com.ktb.eatbookappbackend.domain.novel.dto.ContinueReadingInfoDTO;
+import com.ktb.eatbookappbackend.domain.novel.dto.LastReadEpisodeDTO;
 import com.ktb.eatbookappbackend.domain.readingLog.repository.ReadingLogRepository;
 import com.ktb.eatbookappbackend.domain.readingLog.service.ReadingLogService;
 import com.ktb.eatbookappbackend.entity.Member;
@@ -39,16 +41,16 @@ public class ReadingLogServiceTest {
         when(readingLogRepository.findLastReadEpisode(member.getId(), novel.getId())).thenReturn(Optional.of(readingLog));
 
         // when
-        Optional<ContinueReadingInfoDTO> resultOpt = readingLogService.getLastReadEpisode(member.getId(), novel.getId());
+        Optional<ContinueReadingInfoDTO> result = readingLogService.getLastReadEpisode(member.getId(), novel.getId());
 
         // then
-        assertTrue(resultOpt.isPresent());
-        ContinueReadingInfoDTO result = resultOpt.get();
-        assertEquals(readingLog.getEpisode().getId(), result.episodeId());
-        assertEquals(readingLog.getEpisode().getChapterNumber(), result.chapterNumber());
-        assertEquals(readingLog.getEpisode().getTitle(), result.title());
-        assertEquals(readingLog.getPageNumber(), result.pageNumber());
-        assertEquals(readingLog.getTtsLastPositionSeconds().toString(), result.ttsLastPositionSeconds());
+        assertNotNull(result);
+        LastReadEpisodeDTO lastReadEpisode = result.get().continueReadingInfo();
+        assertEquals(readingLog.getEpisode().getId(), lastReadEpisode.episodeId());
+        assertEquals(readingLog.getEpisode().getChapterNumber(), lastReadEpisode.chapterNumber());
+        assertEquals(readingLog.getEpisode().getTitle(), lastReadEpisode.title());
+        assertEquals(readingLog.getPageNumber(), lastReadEpisode.pageNumber());
+        assertEquals(readingLog.getTtsLastPositionSeconds().toString(), lastReadEpisode.ttsLastPositionSeconds());
     }
 
     @Test
@@ -61,9 +63,9 @@ public class ReadingLogServiceTest {
         when(readingLogRepository.findLastReadEpisode(member.getId(), novel.getId())).thenReturn(Optional.empty());
 
         // when
-        Optional<ContinueReadingInfoDTO> result = readingLogService.getLastReadEpisode(member.getId(), novel.getId());
+        Optional<ContinueReadingInfoDTO> continueReadingInfo = readingLogService.getLastReadEpisode(member.getId(), novel.getId());
 
         // then
-        assertTrue(result.isEmpty());
+        assertTrue(continueReadingInfo.isEmpty());
     }
 }
