@@ -11,7 +11,9 @@ import org.springframework.http.HttpStatus;
 public enum NovelErrorCode implements MessageCode {
     NOVEL_NOT_FOUND("요청하신 소설을 찾을 수 없습니다.", HttpStatus.NOT_FOUND),
     ALREADY_BOOKMARKED("이미 북마크를 누른 소설입니다.", HttpStatus.CONFLICT),
-    BOOKMARK_NOT_FOUND("삭제할 북마크를 찾을 수 없습니다.", HttpStatus.NOT_FOUND);
+    BOOKMARK_NOT_FOUND("삭제할 북마크를 찾을 수 없습니다.", HttpStatus.NOT_FOUND),
+    ALREADY_FAVORITE("이미 좋아요를 누른 소설입니다.", HttpStatus.CONFLICT),
+    FAVORITE_NOT_FOUND("삭제할 좋아요를 찾을 수 없습니다.", HttpStatus.NOT_FOUND);
 
     private final String message;
     private final HttpStatus status;
