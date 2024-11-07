@@ -1,11 +1,8 @@
 package com.ktb.eatbookappbackend.member.fixture;
 
-import com.ktb.eatbookappbackend.entity.Bookmark;
 import com.ktb.eatbookappbackend.entity.Member;
-import com.ktb.eatbookappbackend.entity.Novel;
-import org.springframework.test.util.ReflectionTestUtils;
-
 import java.util.UUID;
+import org.springframework.test.util.ReflectionTestUtils;
 
 public class MemberFixture {
 
@@ -20,23 +17,12 @@ public class MemberFixture {
 
     public static Member createMember() {
         Member member = Member.builder()
-                .nickname("nickname")
-                .profileImageUrl("profile")
-                .email("email")
-                .build();
+            .nickname("nickname")
+            .profileImageUrl("profile")
+            .email("email")
+            .build();
         String memberId = UUID.randomUUID().toString();
         ReflectionTestUtils.setField(member, "id", memberId);
         return member;
-    }
-
-
-
-    public static Bookmark createBookmark(Novel novel, Member member) {
-        return Bookmark.builder()
-                .novelId(novel.getId())
-                .memberId(member.getId())
-                .novel(novel)
-                .member(member)
-                .build();
     }
 }

@@ -1,14 +1,18 @@
 package com.ktb.eatbookappbackend.domain.novel.service;
 
+import com.ktb.eatbookappbackend.domain.bookmark.repository.BookmarkRepository;
 import com.ktb.eatbookappbackend.domain.comment.repository.CommentRepository;
 import com.ktb.eatbookappbackend.domain.episode.dto.EpisodeDTO;
 import com.ktb.eatbookappbackend.domain.favorite.repository.FavoriteRepository;
 import com.ktb.eatbookappbackend.domain.fileMetaData.repository.FileMetaDataRepository;
+import com.ktb.eatbookappbackend.domain.member.service.MemberService;
 import com.ktb.eatbookappbackend.domain.novel.dto.NovelDTO;
 import com.ktb.eatbookappbackend.domain.novel.exception.NovelException;
 import com.ktb.eatbookappbackend.domain.novel.message.NovelErrorCode;
 import com.ktb.eatbookappbackend.domain.novel.repository.NovelRepository;
+import com.ktb.eatbookappbackend.entity.Bookmark;
 import com.ktb.eatbookappbackend.entity.Episode;
+import com.ktb.eatbookappbackend.entity.Member;
 import com.ktb.eatbookappbackend.entity.Novel;
 import com.ktb.eatbookappbackend.entity.constant.EpisodeSortOrder;
 import com.ktb.eatbookappbackend.entity.constant.FileType;
@@ -26,6 +30,8 @@ public class NovelService {
     private final FavoriteRepository favoriteRepository;
     private final FileMetaDataRepository fileMetaDataRepository;
     private final CommentRepository commentRepository;
+    private final MemberService memberService;
+    private final BookmarkRepository bookmarkRepository;
 
     /**
      * 고유 식별자로 소설을 찾습니다.
@@ -76,5 +82,46 @@ public class NovelService {
                 return EpisodeDTO.of(episode, ttsAvailable, scriptAvailable, commentCount);
             })
             .toList();
+    }
+
+    /**
+     * 특정 소설과 멤버에 대한 북마크를 추가합니다.
+     *
+     * @param novelId  북마크할 소설의 고유 식별자
+     * @param memberId 북마크를 추가할 멤버의 고유 식별자
+     * @throws NovelException 지정된 소설과 멤버에 이미 북마크가 존재하는 경우, 예외가 발생하고 {@link NovelErrorCode#ALREADY_BOOKMARKED}가 전달됩니다.
+     */
+    @Transactional
+    public void addBookmark(String novelId, String memberId) {
+        Novel novel = findById(novelId);
+        Member member = memberService.findById(memberId);
+
+        boolean isBookmarkExists = bookmarkRepository.existsByNovelAndMember(novel, member);
+        if (isBookmarkExists) {
+            throw new NovelException(NovelErrorCode.ALREADY_BOOKMARKED);
+        }
+
+        Bookmark bookmark = Bookmark.builder()
+            .novel(novel)
+            .member(member)
+            .build();
+        bookmarkRepository.save(bookmark);
+    }
+
+    /**
+     * 특정 소설과 멤버에 대한 북마크를 삭제합니다.
+     *
+     * @param novelId  북마크를 삭제할 소설의 고유 식별자
+     * @param memberId 북마크를 소유하는 멤버의 고유 식별자
+     * @throws NovelException 지정된 소설과 멤버에 북마크가 없는 경우, 예외가 발생하고 {@link NovelErrorCode#BOOKMARK_NOT_FOUND}가 전달됩니다.
+     */
+    @Transactional
+    public void deleteBookmark(String novelId, String memberId) {
+        Novel novel = findById(novelId);
+        Member member = memberService.findById(memberId);
+        Bookmark bookmark = bookmarkRepository.findByNovelAndMember(novel, member)
+            .orElseThrow(() -> new NovelException(NovelErrorCode.BOOKMARK_NOT_FOUND));
+
+        bookmarkRepository.delete(bookmark);
     }
 }
