@@ -8,7 +8,7 @@ public class SuccessResponse {
     private SuccessResponse() {
     }
 
-    public static ResponseEntity<?> toResponseEntity(MessageCode successCode) {
+    public static ResponseEntity<SuccessResponseDTO> toResponseEntity(MessageCode successCode) {
         return ResponseEntity.status(successCode.getStatus())
             .body(SuccessResponseDTO.of(successCode));
     }

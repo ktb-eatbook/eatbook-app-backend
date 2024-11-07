@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class NovelExceptionHandler {
 
     @ExceptionHandler(NovelException.class)
-    public ResponseEntity<?> handleNovelException(NovelException e) {
+    public ResponseEntity<FailureResponseDTO> handleNovelException(NovelException e) {
         NovelErrorCode errorCode = e.getErrorCode();
         return ResponseEntity.status(errorCode.getStatus())
             .body(FailureResponseDTO.of(errorCode));
