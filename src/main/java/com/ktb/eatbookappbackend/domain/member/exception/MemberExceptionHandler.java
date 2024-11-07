@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class MemberExceptionHandler {
 
     @ExceptionHandler(MemberException.class)
-    public ResponseEntity<?> handleMemberException(MemberException e) {
+    public ResponseEntity<FailureResponseDTO> handleMemberException(MemberException e) {
         MemberErrorCode errorCode = e.getErrorCode();
         return ResponseEntity.status(errorCode.getStatus())
             .body(FailureResponseDTO.of(errorCode));
