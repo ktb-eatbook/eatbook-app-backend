@@ -2,7 +2,6 @@ package com.ktb.eatbookappbackend.domain.search.service;
 
 import static com.ktb.eatbookappbackend.global.util.ValidationUtil.validatePageIndex;
 
-import com.ktb.eatbookappbackend.domain.episode.repository.EpisodeRepository;
 import com.ktb.eatbookappbackend.domain.favorite.repository.FavoriteRepository;
 import com.ktb.eatbookappbackend.domain.novel.dto.NovelDTO;
 import com.ktb.eatbookappbackend.domain.novel.repository.NovelRepository;
@@ -30,7 +29,6 @@ public class SearchNovelService {
 
     private final NovelRepository novelRepository;
     private final FavoriteRepository favoriteRepository;
-    private final EpisodeRepository episodeRepository;
     private final LevenshteinDistance levenshteinDistance = new LevenshteinDistance();
 
     /**
@@ -45,7 +43,7 @@ public class SearchNovelService {
      */
     public SearchNovelsResultDTO searchNovels(String searchTerm, int page, int size, NovelSearchSortOrder order) {
         int actualPageIndex = page - 1;
-        List<Novel> novels = novelRepository.findAll();
+        List<Novel> novels = novelRepository.findAllWithDetails();
         int totalPages = (int) Math.ceil((double) novels.size() / size);
         validatePageIndex(actualPageIndex, totalPages);
         PageRequest pageRequest = PageRequest.of(actualPageIndex, size);
@@ -87,9 +85,9 @@ public class SearchNovelService {
     public SearchNovelsResultDTO searchNovelsByLatest(String searchTerm, List<Novel> novels, PageRequest pageRequest) {
         List<Novel> sortedNovels = novels.stream()
             .sorted((novel1, novel2) -> {
-                int dateComparison = compareByLatestEpisode(novel1, novel2);
-                if (dateComparison != 0) {
-                    return dateComparison;
+                int releasedDateComparison = compareByLatestEpisode(novel1, novel2);
+                if (releasedDateComparison != 0) {
+                    return releasedDateComparison;
                 }
                 return compareByRelevance(novel1, novel2, searchTerm);
             })
@@ -106,12 +104,12 @@ public class SearchNovelService {
      * @return 첫 번째 소설이 두 번째 소설보다 작으면 음수, 같으면 0, 크면 양수를 반환합니다.
      */
     private int compareByLatestEpisode(Novel novel1, Novel novel2) {
-        LocalDateTime latestDate1 = episodeRepository.findLatestEpisodesByNovel(novel1.getId()).stream()
+        LocalDateTime latestDate1 = novel1.getEpisodes().stream()
             .findFirst()
             .map(Episode::getReleasedDate)
             .orElse(LocalDateTime.MIN);
 
-        LocalDateTime latestDate2 = episodeRepository.findLatestEpisodesByNovel(novel2.getId()).stream()
+        LocalDateTime latestDate2 = novel2.getEpisodes().stream()
             .findFirst()
             .map(Episode::getReleasedDate)
             .orElse(LocalDateTime.MIN);
