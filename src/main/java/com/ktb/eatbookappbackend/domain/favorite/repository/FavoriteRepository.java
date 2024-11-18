@@ -6,7 +6,7 @@ import com.ktb.eatbookappbackend.entity.Novel;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface FavoriteRepository extends JpaRepository<Favorite, String> {
+public interface FavoriteRepository extends JpaRepository<Favorite, String>, FavoriteRepositoryCustom {
 
     boolean existsByNovelAndMember(Novel novel, Member member);
 

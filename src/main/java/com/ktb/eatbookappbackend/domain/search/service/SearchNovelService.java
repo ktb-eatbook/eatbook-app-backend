@@ -2,6 +2,7 @@ package com.ktb.eatbookappbackend.domain.search.service;
 
 import static com.ktb.eatbookappbackend.global.util.ValidationUtil.validatePageIndex;
 
+import com.ktb.eatbookappbackend.domain.favorite.dto.NovelFavoriteCountDTO;
 import com.ktb.eatbookappbackend.domain.favorite.repository.FavoriteRepository;
 import com.ktb.eatbookappbackend.domain.novel.dto.NovelDTO;
 import com.ktb.eatbookappbackend.domain.novel.repository.NovelRepository;
@@ -14,6 +15,7 @@ import com.ktb.eatbookappbackend.global.exception.GlobalException;
 import com.ktb.eatbookappbackend.global.message.GlobalErrorMessage;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.text.similarity.LevenshteinDistance;
@@ -161,9 +163,19 @@ public class SearchNovelService {
             (int) Math.ceil((double) sortedNovels.size() / pageRequest.getPageSize())
         );
 
+        List<String> novelIds = paginatedNovels.stream()
+            .map(Novel::getId)
+            .collect(Collectors.toList());
+
+        List<NovelFavoriteCountDTO> favoriteCounts = favoriteRepository.findFavoriteCountsByNovelIds(novelIds);
+
+        // 좋아요 수를 매핑하는 Map 생성
+        Map<String, Long> favoriteCountsMap = favoriteCounts.stream()
+            .collect(Collectors.toMap(NovelFavoriteCountDTO::novelId, NovelFavoriteCountDTO::count));
+
         List<NovelDTO> novelDTOs = paginatedNovels.stream()
             .map(novel -> {
-                int favoriteCount = favoriteRepository.countByNovelId(novel.getId());
+                int favoriteCount = favoriteCountsMap.getOrDefault(novel.getId(), 0L).intValue();
                 return NovelDTO.of(novel, favoriteCount);
             })
             .collect(Collectors.toList());
