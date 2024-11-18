@@ -23,7 +23,6 @@ public class SearchNovelService {
     private final LevenshteinDistance levenshteinDistance = new LevenshteinDistance();
 
     public SearchNovelsResultDTO searchNovels(String searchTerm, int page, int size, NovelSearchSortOrder order) {
-
         PageRequest pageRequest = PageRequest.of(page - 1, size);
         return searchNovelsByRelevance(searchTerm, pageRequest);
     }
