@@ -168,8 +168,6 @@ public class SearchNovelService {
             .collect(Collectors.toList());
 
         List<NovelFavoriteCountDTO> favoriteCounts = favoriteRepository.findFavoriteCountsByNovelIds(novelIds);
-
-        // 좋아요 수를 매핑하는 Map 생성
         Map<String, Long> favoriteCountsMap = favoriteCounts.stream()
             .collect(Collectors.toMap(NovelFavoriteCountDTO::novelId, NovelFavoriteCountDTO::count));
 
