@@ -4,7 +4,9 @@ import com.ktb.eatbookappbackend.entity.QReadingLog;
 import com.ktb.eatbookappbackend.entity.ReadingLog;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.Optional;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public class ReadingLogRepositoryCustomImpl implements ReadingLogRepositoryCustom {
 
     private final JPAQueryFactory queryFactory;
