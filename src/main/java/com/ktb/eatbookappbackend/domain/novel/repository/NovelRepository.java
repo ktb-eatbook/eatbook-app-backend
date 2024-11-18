@@ -10,7 +10,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-public interface NovelRepository extends JpaRepository<Novel, Long> {
+public interface NovelRepository extends JpaRepository<Novel, String>, NovelRepositoryCustom {
 
     Optional<Novel> findById(String id);
 
