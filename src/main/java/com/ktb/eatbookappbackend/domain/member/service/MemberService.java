@@ -1,10 +1,9 @@
 package com.ktb.eatbookappbackend.domain.member.service;
 
+import static com.ktb.eatbookappbackend.global.util.ValidationUtil.validatePageIndex;
+
 import com.ktb.eatbookappbackend.domain.bookmark.repository.BookmarkRepository;
 import com.ktb.eatbookappbackend.domain.favorite.repository.FavoriteRepository;
-import com.ktb.eatbookappbackend.global.dto.PaginationInfoDTO;
-import com.ktb.eatbookappbackend.global.exception.GlobalException;
-import com.ktb.eatbookappbackend.global.message.GlobalErrorMessage;
 import com.ktb.eatbookappbackend.domain.member.dto.BookmarkedNovelsPaginationDTO;
 import com.ktb.eatbookappbackend.domain.member.exception.MemberException;
 import com.ktb.eatbookappbackend.domain.member.message.MemberErrorCode;
@@ -13,6 +12,7 @@ import com.ktb.eatbookappbackend.domain.novel.dto.NovelDTO;
 import com.ktb.eatbookappbackend.entity.Bookmark;
 import com.ktb.eatbookappbackend.entity.Member;
 import com.ktb.eatbookappbackend.entity.Novel;
+import com.ktb.eatbookappbackend.global.dto.PaginationInfoDTO;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -66,12 +66,5 @@ public class MemberService {
             .collect(Collectors.toList());
 
         return BookmarkedNovelsPaginationDTO.of(paginationInfo, bookmarks);
-    }
-
-    private void validatePageIndex(int pageIndex, int totalPages) {
-        int maxValidPageIndex = totalPages - 1;
-        if (pageIndex > maxValidPageIndex) {
-            throw new GlobalException(GlobalErrorMessage.INVALID_QUERY_PARAMETER);
-        }
     }
 }
