@@ -1,8 +1,8 @@
 package com.ktb.eatbookappbackend.domain.novel.controller;
 
-import com.ktb.eatbookappbackend.domain.global.authentication.Authenticated;
-import com.ktb.eatbookappbackend.domain.global.authentication.AuthenticationAspect;
-import com.ktb.eatbookappbackend.domain.global.reponse.SuccessResponse;
+import com.ktb.eatbookappbackend.global.authentication.Authenticated;
+import com.ktb.eatbookappbackend.global.authentication.AuthenticationAspect;
+import com.ktb.eatbookappbackend.global.reponse.SuccessResponse;
 import com.ktb.eatbookappbackend.domain.novel.message.NovelSuccessCode;
 import com.ktb.eatbookappbackend.domain.novel.service.NovelService;
 import lombok.RequiredArgsConstructor;

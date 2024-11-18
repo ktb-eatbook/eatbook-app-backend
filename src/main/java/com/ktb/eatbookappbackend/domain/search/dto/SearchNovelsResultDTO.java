@@ -1,6 +1,6 @@
 package com.ktb.eatbookappbackend.domain.search.dto;
 
-import com.ktb.eatbookappbackend.domain.global.dto.PaginationInfoDTO;
+import com.ktb.eatbookappbackend.global.dto.PaginationInfoDTO;
 import com.ktb.eatbookappbackend.domain.novel.dto.NovelDTO;
 import java.util.List;
 

@@ -1,7 +1,7 @@
 package com.ktb.eatbookappbackend.domain.search.service;
 
 import com.ktb.eatbookappbackend.domain.favorite.repository.FavoriteRepository;
-import com.ktb.eatbookappbackend.domain.global.dto.PaginationInfoDTO;
+import com.ktb.eatbookappbackend.global.dto.PaginationInfoDTO;
 import com.ktb.eatbookappbackend.domain.novel.dto.NovelDTO;
 import com.ktb.eatbookappbackend.domain.novel.repository.NovelRepository;
 import com.ktb.eatbookappbackend.domain.search.dto.SearchNovelsResultDTO;

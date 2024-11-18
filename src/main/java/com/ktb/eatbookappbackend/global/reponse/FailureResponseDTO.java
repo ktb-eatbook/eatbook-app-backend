@@ -1,12 +1,13 @@
-package com.ktb.eatbookappbackend.domain.global.reponse;
+package com.ktb.eatbookappbackend.global.reponse;
 
-import com.ktb.eatbookappbackend.domain.global.message.MessageCode;
+import com.ktb.eatbookappbackend.global.message.MessageCode;
 
-public record FailureResponseDTO (
-        int statusCode,
-        String message,
-        String subStatus
+public record FailureResponseDTO(
+    int statusCode,
+    String message,
+    String subStatus
 ) {
+
     public static FailureResponseDTO of(MessageCode errorMessage) {
         return new FailureResponseDTO(errorMessage.getStatus().value(), errorMessage.getMessage(), null);
     }

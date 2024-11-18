@@ -2,9 +2,9 @@ package com.ktb.eatbookappbackend.domain.member.service;
 
 import com.ktb.eatbookappbackend.domain.bookmark.repository.BookmarkRepository;
 import com.ktb.eatbookappbackend.domain.favorite.repository.FavoriteRepository;
-import com.ktb.eatbookappbackend.domain.global.dto.PaginationInfoDTO;
-import com.ktb.eatbookappbackend.domain.global.exception.GlobalException;
-import com.ktb.eatbookappbackend.domain.global.message.GlobalErrorMessage;
+import com.ktb.eatbookappbackend.global.dto.PaginationInfoDTO;
+import com.ktb.eatbookappbackend.global.exception.GlobalException;
+import com.ktb.eatbookappbackend.global.message.GlobalErrorMessage;
 import com.ktb.eatbookappbackend.domain.member.dto.BookmarkedNovelsPaginationDTO;
 import com.ktb.eatbookappbackend.domain.member.exception.MemberException;
 import com.ktb.eatbookappbackend.domain.member.message.MemberErrorCode;

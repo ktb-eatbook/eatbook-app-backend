@@ -1,7 +1,7 @@
-package com.ktb.eatbookappbackend.domain.global.exception;
+package com.ktb.eatbookappbackend.global.exception;
 
-import com.ktb.eatbookappbackend.domain.global.message.GlobalErrorMessage;
-import com.ktb.eatbookappbackend.domain.global.reponse.FailureResponseDTO;
+import com.ktb.eatbookappbackend.global.message.GlobalErrorMessage;
+import com.ktb.eatbookappbackend.global.reponse.FailureResponseDTO;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;

@@ -1,6 +1,6 @@
-package com.ktb.eatbookappbackend.domain.global.reponse;
+package com.ktb.eatbookappbackend.global.reponse;
 
-import com.ktb.eatbookappbackend.domain.global.message.MessageCode;
+import com.ktb.eatbookappbackend.global.message.MessageCode;
 
 public record SuccessResponseDTO<T>(
     int statusCode,

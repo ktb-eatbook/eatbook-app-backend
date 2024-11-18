@@ -1,9 +1,9 @@
 package com.ktb.eatbookappbackend.domain.member.controller;
 
-import com.ktb.eatbookappbackend.domain.global.authentication.Authenticated;
-import com.ktb.eatbookappbackend.domain.global.authentication.AuthenticationAspect;
-import com.ktb.eatbookappbackend.domain.global.message.GlobalSuccessMessage;
-import com.ktb.eatbookappbackend.domain.global.reponse.SuccessResponseDTO;
+import com.ktb.eatbookappbackend.global.authentication.Authenticated;
+import com.ktb.eatbookappbackend.global.authentication.AuthenticationAspect;
+import com.ktb.eatbookappbackend.global.message.GlobalSuccessMessage;
+import com.ktb.eatbookappbackend.global.reponse.SuccessResponseDTO;
 import com.ktb.eatbookappbackend.domain.member.dto.BookmarkedNovelsPaginationDTO;
 import com.ktb.eatbookappbackend.domain.member.message.MemberSuccessCode;
 import com.ktb.eatbookappbackend.domain.member.service.MemberService;

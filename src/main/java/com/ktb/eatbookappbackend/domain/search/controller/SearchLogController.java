@@ -1,6 +1,6 @@
 package com.ktb.eatbookappbackend.domain.search.controller;
 
-import com.ktb.eatbookappbackend.domain.global.reponse.SuccessResponseDTO;
+import com.ktb.eatbookappbackend.global.reponse.SuccessResponseDTO;
 import com.ktb.eatbookappbackend.domain.search.dto.SearchLogDTO;
 import com.ktb.eatbookappbackend.domain.search.dto.SearchLogRequest;
 import com.ktb.eatbookappbackend.domain.search.dto.SearchLogResponse;

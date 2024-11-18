@@ -1,6 +1,6 @@
 package com.ktb.eatbookappbackend.domain.search.exception;
 
-import com.ktb.eatbookappbackend.domain.global.exception.DomainException;
+import com.ktb.eatbookappbackend.global.exception.DomainException;
 import com.ktb.eatbookappbackend.domain.search.message.SearchLogErrorCode;
 import lombok.Getter;
 
