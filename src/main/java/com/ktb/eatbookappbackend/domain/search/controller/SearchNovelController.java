@@ -22,6 +22,15 @@ public class SearchNovelController {
 
     private final SearchNovelService searchNovelService;
 
+    /**
+     * 소설을 검색합니다.
+     *
+     * @param page 페이지 번호로, 페이지네이션에 사용됩니다. 1 이상의 정수여야 합니다.
+     * @param size 페이지당 결과 수를 나타냅니다. 1 이상의 정수여야 합니다.
+     * @param term 제목과 작가 이름에서 검색할 검색어입니다.
+     * @param sort 검색 결과의 정렬 순서를 나타냅니다. 기본값은 'relevance'이며, 제공되지 않으면 기본값으로 설정됩니다.
+     * @return 검색 결과를 포함하는 ResponseEntity<SuccessResponseDTO>를 반환합니다.
+     */
     @GetMapping()
     public ResponseEntity<SuccessResponseDTO> createSearchLog(
         @RequestParam(name = "page") @Min(1) final int page,
