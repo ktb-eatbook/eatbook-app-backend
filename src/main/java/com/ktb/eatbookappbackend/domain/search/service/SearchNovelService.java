@@ -47,6 +47,10 @@ public class SearchNovelService {
         int actualPageIndex = page - 1;
         List<Novel> novels = novelRepository.findAllWithDetails();
         int totalPages = (int) Math.ceil((double) novels.size() / size);
+        if (totalPages == 0) {
+            return SearchNovelsResultDTO.of(PaginationInfoDTO.of(1, size, 0, 0), List.of());
+        }
+
         validatePageIndex(actualPageIndex, totalPages);
         PageRequest pageRequest = PageRequest.of(actualPageIndex, size);
 
@@ -99,7 +103,7 @@ public class SearchNovelService {
     }
 
     /**
-     * 두 소설의 최신 에피소드의 릴리즈 날짜를 비교합니다. 릴리즈 날짜가 더 최근인 소설이 더 높은 우선순위로 간주됩니다. 릴리스 날짜가 같으면, 검색어와의 관련성을 기반으로 정렬합니다.
+     * 두 소설의 최신 에피소드의 릴리즈 날짜를 비교합니다. 릴리즈 날짜가 더 최근인 소설이 더 높은 우선순위로 간주됩니다.
      *
      * @param novel1 비교할 첫 번째 소설입니다.
      * @param novel2 비교할 두 번째 소설입니다.
@@ -107,13 +111,13 @@ public class SearchNovelService {
      */
     private int compareByLatestEpisode(Novel novel1, Novel novel2) {
         LocalDateTime latestDate1 = novel1.getEpisodes().stream()
-            .findFirst()
             .map(Episode::getReleasedDate)
+            .max(LocalDateTime::compareTo)
             .orElse(LocalDateTime.MIN);
 
         LocalDateTime latestDate2 = novel2.getEpisodes().stream()
-            .findFirst()
             .map(Episode::getReleasedDate)
+            .max(LocalDateTime::compareTo)
             .orElse(LocalDateTime.MIN);
 
         return latestDate2.compareTo(latestDate1);
