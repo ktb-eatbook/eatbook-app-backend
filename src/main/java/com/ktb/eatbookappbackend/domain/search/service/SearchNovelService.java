@@ -21,6 +21,7 @@ import lombok.RequiredArgsConstructor;
 import org.apache.commons.text.similarity.LevenshteinDistance;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Service
@@ -43,6 +44,7 @@ public class SearchNovelService {
      * @return {@link SearchNovelsResultDTO}를 포함하는 {@link SearchNovelsResultDTO}로, 페이지네이션된 검색 결과와 페이지네이션 정보를 포함합니다.
      * @throws GlobalException 제공된 페이지 인덱스가 잘못된 경우 발생합니다.
      */
+    @Transactional(readOnly = true)
     public SearchNovelsResultDTO searchNovels(String searchTerm, int page, int size, NovelSearchSortOrder order) {
         int actualPageIndex = page - 1;
         List<Novel> novels = novelRepository.findAllWithDetails();
@@ -88,6 +90,7 @@ public class SearchNovelService {
      * @param pageRequest 결과에 대한 페이지네이션 정보입니다.
      * @return {@link SearchNovelsResultDTO}로, 페이지네이션된 검색 결과와 페이지네이션 정보를 포함합니다.
      */
+    @Transactional(readOnly = true)
     public SearchNovelsResultDTO searchNovelsByLatest(String searchTerm, List<Novel> novels, PageRequest pageRequest) {
         List<Novel> sortedNovels = novels.stream()
             .sorted((novel1, novel2) -> {
@@ -155,7 +158,8 @@ public class SearchNovelService {
         return Integer.compare(authorDistance1, authorDistance2);
     }
 
-    private SearchNovelsResultDTO createPaginatedResult(List<Novel> sortedNovels, PageRequest pageRequest) {
+    @Transactional(readOnly = true)
+    protected SearchNovelsResultDTO createPaginatedResult(List<Novel> sortedNovels, PageRequest pageRequest) {
         int start = (int) pageRequest.getOffset();
         int end = Math.min(start + pageRequest.getPageSize(), sortedNovels.size());
         List<Novel> paginatedNovels = sortedNovels.subList(start, end);
