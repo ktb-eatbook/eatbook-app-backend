@@ -1,4 +1,4 @@
-package com.ktb.eatbookappbackend.domain.global.message;
+package com.ktb.eatbookappbackend.global.message;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

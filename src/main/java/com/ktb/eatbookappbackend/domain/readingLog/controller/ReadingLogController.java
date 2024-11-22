@@ -1,9 +1,9 @@
 package com.ktb.eatbookappbackend.domain.readingLog.controller;
 
-import com.ktb.eatbookappbackend.domain.global.authentication.Authenticated;
-import com.ktb.eatbookappbackend.domain.global.authentication.AuthenticationAspect;
-import com.ktb.eatbookappbackend.domain.global.message.GlobalSuccessMessage;
-import com.ktb.eatbookappbackend.domain.global.reponse.SuccessResponseDTO;
+import com.ktb.eatbookappbackend.global.authentication.Authenticated;
+import com.ktb.eatbookappbackend.global.authentication.AuthenticationAspect;
+import com.ktb.eatbookappbackend.global.message.GlobalSuccessMessage;
+import com.ktb.eatbookappbackend.global.reponse.SuccessResponseDTO;
 import com.ktb.eatbookappbackend.domain.novel.dto.ContinueReadingInfoDTO;
 import com.ktb.eatbookappbackend.domain.readingLog.message.ReadingLogSuccessCode;
 import com.ktb.eatbookappbackend.domain.readingLog.service.ReadingLogService;

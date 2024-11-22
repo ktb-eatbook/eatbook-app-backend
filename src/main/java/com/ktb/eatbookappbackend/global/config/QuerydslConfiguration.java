@@ -1,4 +1,4 @@
-package com.ktb.eatbookappbackend.domain.global.config;
+package com.ktb.eatbookappbackend.global.config;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;

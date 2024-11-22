@@ -1,4 +1,4 @@
-package com.ktb.eatbookappbackend.domain.member.message;
+package com.ktb.eatbookappbackend.domain.search.message;
 
 import com.ktb.eatbookappbackend.global.message.MessageCode;
 import lombok.AccessLevel;
@@ -8,8 +8,8 @@ import org.springframework.http.HttpStatus;
 
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public enum MemberSuccessCode implements MessageCode {
-    BOOKMARKS_RETRIEVED("성공적으로 북마크를 누른 소설 목록을 조회했습니다.", HttpStatus.OK);
+public enum SearchNovelSuccessCode implements MessageCode {
+    SEARCH_SUCCESS("성공적으로 소설 목록을 검색했습니다.", HttpStatus.CREATED);
 
     private final String message;
     private final HttpStatus status;

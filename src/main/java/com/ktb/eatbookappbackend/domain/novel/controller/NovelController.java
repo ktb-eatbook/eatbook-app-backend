@@ -1,9 +1,9 @@
 package com.ktb.eatbookappbackend.domain.novel.controller;
 
 import com.ktb.eatbookappbackend.domain.episode.dto.EpisodeDTO;
-import com.ktb.eatbookappbackend.domain.global.message.GlobalSuccessMessage;
-import com.ktb.eatbookappbackend.domain.global.reponse.FailureResponseDTO;
-import com.ktb.eatbookappbackend.domain.global.reponse.SuccessResponseDTO;
+import com.ktb.eatbookappbackend.global.message.GlobalSuccessMessage;
+import com.ktb.eatbookappbackend.global.reponse.FailureResponseDTO;
+import com.ktb.eatbookappbackend.global.reponse.SuccessResponseDTO;
 import com.ktb.eatbookappbackend.domain.novel.dto.NovelDTO;
 import com.ktb.eatbookappbackend.domain.novel.exception.NovelException;
 import com.ktb.eatbookappbackend.domain.novel.message.NovelErrorCode;

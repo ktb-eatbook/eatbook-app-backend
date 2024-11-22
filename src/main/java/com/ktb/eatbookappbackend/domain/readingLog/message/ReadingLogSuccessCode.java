@@ -1,6 +1,6 @@
 package com.ktb.eatbookappbackend.domain.readingLog.message;
 
-import com.ktb.eatbookappbackend.domain.global.message.MessageCode;
+import com.ktb.eatbookappbackend.global.message.MessageCode;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

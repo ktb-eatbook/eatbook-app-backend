@@ -1,6 +1,6 @@
-package com.ktb.eatbookappbackend.domain.global.exception;
+package com.ktb.eatbookappbackend.global.exception;
 
-import com.ktb.eatbookappbackend.domain.global.message.GlobalErrorMessage;
+import com.ktb.eatbookappbackend.global.message.GlobalErrorMessage;
 import lombok.Getter;
 
 @Getter

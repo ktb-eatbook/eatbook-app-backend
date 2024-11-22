@@ -1,6 +1,6 @@
 package com.ktb.eatbookappbackend.domain.member.exception;
 
-import com.ktb.eatbookappbackend.domain.global.reponse.FailureResponseDTO;
+import com.ktb.eatbookappbackend.global.reponse.FailureResponseDTO;
 import com.ktb.eatbookappbackend.domain.member.message.MemberErrorCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;

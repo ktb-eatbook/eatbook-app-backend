@@ -9,7 +9,7 @@ import static org.mockito.Mockito.when;
 import com.ktb.eatbookappbackend.bookmark.fixture.BookmarkFixture;
 import com.ktb.eatbookappbackend.domain.bookmark.repository.BookmarkRepository;
 import com.ktb.eatbookappbackend.domain.favorite.repository.FavoriteRepository;
-import com.ktb.eatbookappbackend.domain.global.dto.PaginationInfoDTO;
+import com.ktb.eatbookappbackend.global.dto.PaginationInfoDTO;
 import com.ktb.eatbookappbackend.domain.member.dto.BookmarkedNovelsPaginationDTO;
 import com.ktb.eatbookappbackend.domain.member.service.MemberService;
 import com.ktb.eatbookappbackend.domain.novel.dto.NovelDTO;

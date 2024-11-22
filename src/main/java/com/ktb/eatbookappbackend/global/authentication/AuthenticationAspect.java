@@ -1,7 +1,7 @@
-package com.ktb.eatbookappbackend.domain.global.authentication;
+package com.ktb.eatbookappbackend.global.authentication;
 
-import com.ktb.eatbookappbackend.domain.global.message.GlobalErrorMessage;
-import com.ktb.eatbookappbackend.domain.global.reponse.FailureResponseDTO;
+import com.ktb.eatbookappbackend.global.message.GlobalErrorMessage;
+import com.ktb.eatbookappbackend.global.reponse.FailureResponseDTO;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
