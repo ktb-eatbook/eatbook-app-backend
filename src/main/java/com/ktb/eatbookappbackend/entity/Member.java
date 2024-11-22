@@ -1,8 +1,12 @@
 package com.ktb.eatbookappbackend.entity;
 
 import com.ktb.eatbookappbackend.entity.base.SoftDeletableEntity;
+import com.ktb.eatbookappbackend.entity.constant.AgeGroup;
+import com.ktb.eatbookappbackend.entity.constant.AgeGroupConverter;
+import com.ktb.eatbookappbackend.entity.constant.Gender;
 import com.ktb.eatbookappbackend.entity.constant.Role;
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -45,13 +49,25 @@ public class Member extends SoftDeletableEntity {
 
     @NotNull
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private Gender gender;
+
+    @NotNull
+    @Column(nullable = false, columnDefinition = "TINYINT UNSIGNED")
+    @Convert(converter = AgeGroupConverter.class)
+    private AgeGroup ageGroup;
+
+    @NotNull
+    @Column(nullable = false)
     private String email;
 
     @Builder
-    public Member(String nickname, String profileImageUrl, String email) {
+    public Member(final String nickname, final String profileImageUrl, final String email, final Gender gender, final AgeGroup ageGroup) {
         this.nickname = nickname;
         this.profileImageUrl = profileImageUrl;
         this.email = email;
+        this.gender = gender;
+        this.ageGroup = ageGroup;
     }
 
     @Override
