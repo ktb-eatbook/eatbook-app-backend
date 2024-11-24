@@ -24,7 +24,7 @@ public class JwtUtil {
 
     private static final String ROLE_CLAIM = "role";
     private static final String OAUTH_PROVIDER_CLAIM = "provider";
-    private static final String USER_ID_CLAIM = "userId";
+    private static final String MEMBER_ID_CLAIM = "memberId";
 
     @Value("${spring.security.jwt.access.expiration}")
     private long accessTokenExpirationPeriod;
@@ -55,7 +55,7 @@ public class JwtUtil {
         return Jwts.builder()
             .issuer("eatbook")
             .subject(ACCESS_TOKEN.getValue())
-            .claim(USER_ID_CLAIM, memberId)
+            .claim(MEMBER_ID_CLAIM, memberId)
             .claim(ROLE_CLAIM, role.name())
             .expiration(expireDate)
             .signWith(secretKey, Jwts.SIG.HS512)
@@ -69,7 +69,7 @@ public class JwtUtil {
         return Jwts.builder()
             .issuer("eatbook")
             .subject(REFRESH_TOKEN.getValue())
-            .claim(USER_ID_CLAIM, memberId)
+            .claim(MEMBER_ID_CLAIM, memberId)
             .issuedAt(now)
             .expiration(expireDate)
             .signWith(secretKey, Jwts.SIG.HS512)
@@ -103,7 +103,7 @@ public class JwtUtil {
             .parseSignedClaims(token)
             .getPayload();
 
-        String memberId = payload.get(USER_ID_CLAIM, String.class);
+        String memberId = payload.get(MEMBER_ID_CLAIM, String.class);
         Role userRole = Role.valueOf(payload.get(ROLE_CLAIM, String.class));
 
         return JwtClaimDTO.of(memberId, userRole);
