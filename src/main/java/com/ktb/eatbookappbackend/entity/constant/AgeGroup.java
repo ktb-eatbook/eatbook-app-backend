@@ -3,6 +3,7 @@ package com.ktb.eatbookappbackend.entity.constant;
 import java.util.Arrays;
 
 public enum AgeGroup {
+    TEENS(10),
     TWENTIES(20),
     THIRTIES(30),
     FORTIES(40),
@@ -10,7 +11,8 @@ public enum AgeGroup {
     SIXTIES(60),
     SEVENTIES(70),
     EIGHTIES(80),
-    NINETIES(90);
+    NINETIES(90),
+    HUNDREDS(100);
 
     private final int value;
 
