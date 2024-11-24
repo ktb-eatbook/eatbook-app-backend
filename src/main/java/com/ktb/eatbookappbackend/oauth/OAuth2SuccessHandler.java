@@ -66,7 +66,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
             String refreshToken = jwtUtil.generateRefreshToken(oAuth2member.getMemberId());
             log.info("생성한 access token: " + accessToken);
             log.info("생성한 refresh token: " + refreshToken);
-//            tokenService.saveRefreshToken(refreshToken, oAuth2member.getMemberId());
+            tokenService.saveRefreshToken(refreshToken, oAuth2member.getMemberId());
 
             ResponseCookie accessTokenCookie = cookieService.createCookie(ACCESS_TOKEN.getValue(), accessToken);
             ResponseCookie refreshTokenCookie = cookieService.createCookie(REFRESH_TOKEN.getValue(), refreshToken);
