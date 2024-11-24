@@ -3,7 +3,14 @@ package com.ktb.eatbookappbackend.oauth.jwt;
 import static com.ktb.eatbookappbackend.oauth.jwt.constant.TokenType.ACCESS_TOKEN;
 import static org.springframework.http.HttpHeaders.SET_COOKIE;
 
+import com.ktb.eatbookappbackend.domain.member.exception.MemberException;
+import com.ktb.eatbookappbackend.domain.member.message.MemberErrorCode;
 import com.ktb.eatbookappbackend.domain.member.repository.MemberRepository;
+import com.ktb.eatbookappbackend.domain.refreshToken.exception.RefreshTokenException;
+import com.ktb.eatbookappbackend.domain.refreshToken.message.RefreshTokenErrorCode;
+import com.ktb.eatbookappbackend.domain.refreshToken.repository.RefreshTokenRepository;
+import com.ktb.eatbookappbackend.entity.Member;
+import com.ktb.eatbookappbackend.entity.RefreshToken;
 import com.ktb.eatbookappbackend.entity.constant.Role;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +21,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class TokenService {
 
-    //    private final RefreshTokenRepository refreshTokenRepository;
+    private final RefreshTokenRepository refreshTokenRepository;
     private final MemberRepository memberRepository;
     private final JwtUtil jwtUtil;
     private final CookieService cookieService;
@@ -27,21 +34,19 @@ public class TokenService {
     }
 
     public String createAccessToken(final String refreshToken) {
-//        RefreshToken findRefreshToken = refreshTokenRepository.findById(refreshToken)
-//            .orElseThrow(() -> new EntityNotFoundException("Refresh Token not found"));
-//
-//        Member member = memberRepository.findById(findRefreshToken.())
-//            .orElseThrow(() -> new EntityNotFoundException("User not found"));
+        RefreshToken findRefreshToken = refreshTokenRepository.findById(refreshToken)
+            .orElseThrow(() -> new RefreshTokenException(RefreshTokenErrorCode.TOKEN_NOT_FOUND));
 
-//        return jwtUtil.generateAccessToken(findRefreshToken.getUserId(), Role.MEMBER);
-        return jwtUtil.generateAccessToken("0d512372-c241-4220-a3b4-1333a4d13479", Role.MEMBER);
+        Member member = findRefreshToken.getMember();
+        return jwtUtil.generateAccessToken(member.getId(), Role.MEMBER);
     }
 
-//    public void saveRefreshToken(String refreshToken, Long userId) {
-//        refreshTokenRepository.save(new RefreshToken(refreshToken, userId));
-//    }
+    public void saveRefreshToken(String refreshToken, String memberId) {
+        Member member = memberRepository.findById(memberId).orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND));
+        refreshTokenRepository.save(new RefreshToken(refreshToken, member));
+    }
 
-//    public void deleteRefreshToken(String refreshToken) {
-//        refreshTokenRepository.deleteById(refreshToken);
-//    }
+    public void deleteRefreshToken(String refreshToken) {
+        refreshTokenRepository.deleteById(refreshToken);
+    }
 }
