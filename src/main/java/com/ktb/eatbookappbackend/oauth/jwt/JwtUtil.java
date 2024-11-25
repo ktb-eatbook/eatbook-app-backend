@@ -5,6 +5,7 @@ import static com.ktb.eatbookappbackend.oauth.jwt.constant.TokenType.REFRESH_TOK
 
 import com.ktb.eatbookappbackend.entity.constant.Role;
 import jakarta.annotation.PostConstruct;
+import java.util.HashMap;
 import java.util.Map;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -135,10 +136,10 @@ public class JwtUtil {
         String nickname = payload.get("nickname", String.class);
         String profileImage = payload.get("profileImage", String.class);
 
-        return Map.of(
-            "email", email,
-            "nickname", nickname,
-            "profileImage", profileImage
-        );
+        Map<String, String> claims = new HashMap<>();
+        claims.put("email", email);
+        claims.put("nickname", nickname);
+        claims.put("profileImage", profileImage);
+        return claims;
     }
 }
