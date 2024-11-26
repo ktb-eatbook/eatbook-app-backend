@@ -26,6 +26,9 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     @Value("${app.properties.frontendDomain}")
     private String frontendDomain;
 
+    @Value("${app.properties.apiBaseUrl}")
+    private String apiBaseUrl;
+
     private final JwtUtil jwtUtil;
     private final CookieService cookieService;
     private final TokenService tokenService;
@@ -47,17 +50,16 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
                 String nickname = memberInfo.getNickname();
                 String profileImage = memberInfo.getProfileImage();
 
-                // 회원가입 토큰 생성
+                // 회원가입 과정에서 사용되는 토큰 생성
                 String signupToken = jwtUtil.generateSignupToken(email, nickname, profileImage);
 
-                // 리디렉션 URL 생성
-                String redirectUrl = UriComponentsBuilder.fromUriString(frontendDomain + "/additional-info")
+                String redirectUrl = UriComponentsBuilder.fromUriString(
+                        apiBaseUrl + "/api/signup/additional-info")
                     .queryParam("token", signupToken)
                     .build()
                     .toUriString();
 
                 log.info("Redirect URL: {}", redirectUrl);
-
                 response.sendRedirect(redirectUrl);
                 return;
             }
