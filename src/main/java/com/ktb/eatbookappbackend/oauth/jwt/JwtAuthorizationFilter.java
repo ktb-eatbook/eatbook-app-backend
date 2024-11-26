@@ -3,7 +3,6 @@ package com.ktb.eatbookappbackend.oauth.jwt;
 import static com.ktb.eatbookappbackend.oauth.jwt.constant.TokenType.ACCESS_TOKEN;
 import static com.ktb.eatbookappbackend.oauth.jwt.constant.TokenType.REFRESH_TOKEN;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ktb.eatbookappbackend.entity.constant.Role;
 import com.ktb.eatbookappbackend.oauth.exception.TokenException;
 import com.ktb.eatbookappbackend.oauth.message.TokenErrorCode;
@@ -37,7 +36,19 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
         throws IOException, ServletException {
         Cookie[] cookies = request.getCookies();
         String path = request.getRequestURI();
-        log.info("path: " + path);
+        log.info("doFilterInternal에 들어온 request의 Path: " + path);
+
+        if ("/favicon.ico".equals(path)) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
+        if ("/api/signup/additional-info".equals(path)) {
+            log.info("회원가입 요청은 쿠키를 검사하지 않습니다.");
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         if (cookies == null) {
             log.info("쿠키가 비어있습니다.");
             filterChain.doFilter(request, response);
