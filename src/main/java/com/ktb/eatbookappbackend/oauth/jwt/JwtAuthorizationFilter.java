@@ -3,8 +3,9 @@ package com.ktb.eatbookappbackend.oauth.jwt;
 import static com.ktb.eatbookappbackend.oauth.jwt.constant.TokenType.ACCESS_TOKEN;
 import static com.ktb.eatbookappbackend.oauth.jwt.constant.TokenType.REFRESH_TOKEN;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ktb.eatbookappbackend.entity.constant.Role;
-import com.ktb.eatbookappbackend.oauth.exception.TokenException;
+import com.ktb.eatbookappbackend.global.reponse.FailureResponseDTO;
 import com.ktb.eatbookappbackend.oauth.message.TokenErrorCode;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -62,7 +63,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
         if (cookies == null) {
             log.info("쿠키가 비어있습니다.");
-            filterChain.doFilter(request, response);
+            sendErrorResponse(response);
             return;
         }
 
@@ -91,12 +92,12 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
             cookieService.deleteCookie(response, ACCESS_TOKEN.getValue());
         }
 
-        if (!jwtUtil.validateRefreshToken(refreshToken)) {
+        if (refreshToken != null && !jwtUtil.validateRefreshToken(refreshToken)) {
             log.info("refreshToken이 유효하지 않아 삭제합니다.");
             cookieService.deleteCookie(response, REFRESH_TOKEN.getValue());
         }
 
-        throw new TokenException(TokenErrorCode.INVALID_TOKEN);
+        sendErrorResponse(response);
     }
 
     private String extractCookie(Cookie[] cookies, String cookieName) {
@@ -117,5 +118,20 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
             new UsernamePasswordAuthenticationToken(memberId, null, List.of(role::name));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
+    }
+
+    private void sendErrorResponse(HttpServletResponse response) throws IOException {
+        TokenErrorCode tokenErrorCode = TokenErrorCode.INVALID_TOKEN;
+        log.info("TokenError 발생");
+
+        response.setStatus(tokenErrorCode.getStatus().value());
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+
+        FailureResponseDTO failureResponseDTO = FailureResponseDTO.of(tokenErrorCode);
+        ObjectMapper objectMapper = new ObjectMapper();
+        String jsonResponse = objectMapper.writeValueAsString(failureResponseDTO);
+
+        response.getWriter().write(jsonResponse);
     }
 }
