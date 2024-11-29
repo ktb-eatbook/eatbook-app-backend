@@ -20,20 +20,18 @@ public class CookieService {
     @Value("${app.properties.cookieSecure}")
     private boolean cookieSecure;
 
-    // TO DO - secure, domain, sameSite 설정 추가
     public ResponseCookie createCookie(String cookieName, String cookieValue) {
         return ResponseCookie.from(cookieName, cookieValue)
             .path("/")
             .sameSite(cookieSameSite)
-            .httpOnly(true)
             .secure(cookieSecure)
+            .httpOnly(false)
             .build();
     }
 
     public void deleteCookie(HttpServletResponse response, String cookieName) {
         ResponseCookie deleteCookie = ResponseCookie.from(cookieName, "")
             .path("/")
-            .httpOnly(true)
             .maxAge(0)
             .build();
 
