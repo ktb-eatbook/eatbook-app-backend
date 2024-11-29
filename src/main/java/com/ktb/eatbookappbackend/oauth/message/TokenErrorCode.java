@@ -10,7 +10,7 @@ import org.springframework.http.HttpStatus;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public enum TokenErrorCode implements MessageCode {
 
-    INVALID_TOKEN("토큰이 유효하지 않습니다.", HttpStatus.FORBIDDEN);
+    INVALID_TOKEN("토큰이 유효하지 않습니다.", HttpStatus.UNAUTHORIZED);
 
     private final String message;
     private final HttpStatus status;
