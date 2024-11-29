@@ -1,6 +1,8 @@
-package com.ktb.eatbookappbackend.oauth;
+package com.ktb.eatbookappbackend.oauth.handler;
 
 import com.ktb.eatbookappbackend.global.util.AESUtil;
+import com.ktb.eatbookappbackend.oauth.dto.OAuth2CustomMember;
+import com.ktb.eatbookappbackend.oauth.dto.OAuth2MemberInfo;
 import com.ktb.eatbookappbackend.oauth.jwt.JwtUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

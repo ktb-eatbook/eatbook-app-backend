@@ -1,4 +1,4 @@
-package com.ktb.eatbookappbackend.oauth;
+package com.ktb.eatbookappbackend.oauth.dto;
 
 import com.ktb.eatbookappbackend.entity.Member;
 import java.util.Map;

@@ -1,8 +1,10 @@
-package com.ktb.eatbookappbackend.oauth;
+package com.ktb.eatbookappbackend.oauth.service;
 
 import com.ktb.eatbookappbackend.domain.member.repository.MemberRepository;
 import com.ktb.eatbookappbackend.entity.Member;
 import com.ktb.eatbookappbackend.entity.constant.Role;
+import com.ktb.eatbookappbackend.oauth.dto.OAuth2CustomMember;
+import com.ktb.eatbookappbackend.oauth.dto.OAuthAttributes;
 import java.util.Collections;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;

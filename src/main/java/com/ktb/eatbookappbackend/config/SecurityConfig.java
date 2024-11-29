@@ -1,7 +1,7 @@
 package com.ktb.eatbookappbackend.config;
 
-import com.ktb.eatbookappbackend.oauth.CustomOAuth2MemberService;
-import com.ktb.eatbookappbackend.oauth.OAuth2SuccessHandler;
+import com.ktb.eatbookappbackend.oauth.service.CustomOAuth2MemberService;
+import com.ktb.eatbookappbackend.oauth.handler.OAuth2SuccessHandler;
 import com.ktb.eatbookappbackend.oauth.jwt.JwtAuthorizationFilter;
 import org.springframework.beans.factory.annotation.Qualifier;
 import lombok.RequiredArgsConstructor;

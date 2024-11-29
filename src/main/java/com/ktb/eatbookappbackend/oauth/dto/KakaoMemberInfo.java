@@ -1,4 +1,4 @@
-package com.ktb.eatbookappbackend.oauth;
+package com.ktb.eatbookappbackend.oauth.dto;
 
 import java.util.Map;
 
