@@ -2,7 +2,9 @@ package com.ktb.eatbookappbackend.oauth.jwt;
 
 import static org.springframework.http.HttpHeaders.SET_COOKIE;
 
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
+import java.util.Arrays;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -36,5 +38,13 @@ public class CookieService {
             .build();
 
         response.addHeader(SET_COOKIE, deleteCookie.toString());
+    }
+
+    public String extractCookie(Cookie[] cookies, String cookieName) {
+        return Arrays.stream(cookies)
+            .filter(cookie -> cookie.getName().equals(cookieName))
+            .findFirst()
+            .map(Cookie::getValue)
+            .orElse(null);
     }
 }

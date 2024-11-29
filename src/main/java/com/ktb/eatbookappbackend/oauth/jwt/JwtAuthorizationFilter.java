@@ -13,7 +13,6 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Pattern;
 import lombok.RequiredArgsConstructor;
@@ -67,8 +66,8 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
             return;
         }
 
-        String accessToken = extractCookie(cookies, ACCESS_TOKEN.getValue());
-        String refreshToken = extractCookie(cookies, REFRESH_TOKEN.getValue());
+        String accessToken = cookieService.extractCookie(cookies, ACCESS_TOKEN.getValue());
+        String refreshToken = cookieService.extractCookie(cookies, REFRESH_TOKEN.getValue());
         log.info("accessToken: " + accessToken);
         log.info("refreshToken: " + refreshToken);
 
@@ -98,14 +97,6 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
         }
 
         sendErrorResponse(response);
-    }
-
-    private String extractCookie(Cookie[] cookies, String cookieName) {
-        return Arrays.stream(cookies)
-            .filter(cookie -> cookie.getName().equals(cookieName))
-            .findFirst()
-            .map(Cookie::getValue)
-            .orElse(null); // 쿠키가 존재하지 않을 경우 null 반환
     }
 
     private void setAuthInSecurityContext(String accessToken) {
