@@ -33,7 +33,6 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
     private final CookieService cookieService;
 
     private static final List<String> EXCLUDED_PATHS = List.of(
-        "/api/signup/additional-info",
         "/api/signup",
         "/favicon.ico",
         "/api/novel/.*",              // /api/novel/{novelId}
