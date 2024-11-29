@@ -31,23 +31,25 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
     private final TokenService tokenService;
     private final CookieService cookieService;
 
+    private static final List<String> EXCLUDED_PATHS = List.of(
+        "/api/signup/additional-info",
+        "/api/signup",
+        "/favicon.ico"
+    );
+
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+        String path = request.getRequestURI();
+        log.info("토큰 확인을 수행하지 않는 path입니다. path: " + path);
+        return EXCLUDED_PATHS.contains(path);
+    }
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
         throws IOException, ServletException {
         Cookie[] cookies = request.getCookies();
         String path = request.getRequestURI();
         log.info("doFilterInternal에 들어온 request의 Path: " + path);
-
-        if ("/favicon.ico".equals(path)) {
-            filterChain.doFilter(request, response);
-            return;
-        }
-
-        if ("/api/signup/additional-info".equals(path)) {
-            log.info("회원가입 요청은 쿠키를 검사하지 않습니다.");
-            filterChain.doFilter(request, response);
-            return;
-        }
 
         if (cookies == null) {
             log.info("쿠키가 비어있습니다.");
