@@ -35,6 +35,13 @@ public class MemberService {
             .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND));
     }
 
+    @Transactional
+    public void deleteMember(String memberId) {
+        Member member = findById(memberId);
+        member.delete();
+        memberRepository.save(member);
+    }
+
     /**
      * 특정 멤버가 북마크한 소설 목록을 페이지로 나누어 반환합니다.
      *

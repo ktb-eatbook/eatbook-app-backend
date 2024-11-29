@@ -6,6 +6,7 @@ import static com.ktb.eatbookappbackend.oauth.jwt.constant.TokenType.REFRESH_TOK
 import com.ktb.eatbookappbackend.domain.member.exception.MemberException;
 import com.ktb.eatbookappbackend.domain.member.message.MemberErrorCode;
 import com.ktb.eatbookappbackend.domain.member.repository.MemberRepository;
+import com.ktb.eatbookappbackend.domain.member.service.MemberService;
 import com.ktb.eatbookappbackend.domain.refreshToken.repository.RefreshTokenRepository;
 import com.ktb.eatbookappbackend.entity.Member;
 import com.ktb.eatbookappbackend.entity.constant.Role;
@@ -19,7 +20,7 @@ import com.ktb.eatbookappbackend.oauth.jwt.CookieService;
 import com.ktb.eatbookappbackend.oauth.jwt.JwtUtil;
 import com.ktb.eatbookappbackend.oauth.jwt.TokenService;
 import com.ktb.eatbookappbackend.oauth.message.AuthSuccessCode;
-import com.ktb.eatbookappbackend.oauth.service.SignupService;
+import com.ktb.eatbookappbackend.oauth.service.AuthService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -29,6 +30,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -45,9 +48,10 @@ public class AuthController {
     private final AESUtil aesUtil;
     private final TokenService tokenService;
     private final CookieService cookieService;
-    private final SignupService signupService;
+    private final AuthService authService;
     private final MemberRepository memberRepository;
     private final RefreshTokenRepository refreshTokenRepository;
+    private final MemberService memberService;
 
     @PostMapping("/email-login")
     public ResponseEntity<SuccessResponseDTO> processEmailLogin(@RequestBody EmailLoginRequestDTO emailLoginRequestDTO) {
@@ -84,7 +88,7 @@ public class AuthController {
         }
 
         Map<String, String> signupInfo = jwtUtil.extractSignupClaims(signupToken);
-        SignupResponseDTO signupResponseDTO = signupService.signUp(
+        SignupResponseDTO signupResponseDTO = authService.signUp(
             signupInfo.get("email"),
             signupInfo.get("nickname"),
             signupInfo.get("profileImage"),
@@ -121,5 +125,29 @@ public class AuthController {
         }
 
         return SuccessResponse.toResponseEntity(AuthSuccessCode.LOGOUT_COMPLETED);
+    }
+
+    @Secured(Role.MEMBER_VALUE)
+    @DeleteMapping("/members")
+    public ResponseEntity<SuccessResponseDTO> deleteMember(
+        HttpServletRequest request,
+        HttpServletResponse response,
+        @AuthenticationPrincipal String memberId
+    ) {
+        memberService.deleteMember(memberId);
+
+        Cookie[] cookies = request.getCookies();
+        String accessToken = cookieService.extractCookie(cookies, ACCESS_TOKEN.getValue());
+        String refreshToken = cookieService.extractCookie(cookies, REFRESH_TOKEN.getValue());
+
+        if (accessToken != null) {
+            cookieService.deleteCookie(response, ACCESS_TOKEN.getValue());
+        }
+
+        if (refreshToken != null && jwtUtil.validateRefreshToken(refreshToken)) {
+            refreshTokenRepository.deleteById(refreshToken);
+            cookieService.deleteCookie(response, REFRESH_TOKEN.getValue());
+        }
+        return SuccessResponse.toResponseEntity(AuthSuccessCode.DELETE_MEMBER_COMPLETED);
     }
 }
