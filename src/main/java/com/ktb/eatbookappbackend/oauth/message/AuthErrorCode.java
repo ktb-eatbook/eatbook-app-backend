@@ -8,9 +8,9 @@ import org.springframework.http.HttpStatus;
 
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public enum SignupSuccessCode implements MessageCode {
+public enum AuthErrorCode implements MessageCode {
 
-    SIGN_UP_COMPLETED("성공적으로 회원가입했습니다.", HttpStatus.CREATED);
+    EMAIL_DUPLICATED("이미 가입한 유저의 이메일입니다.", HttpStatus.CONFLICT);
 
     private final String message;
     private final HttpStatus status;

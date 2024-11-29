@@ -9,7 +9,7 @@ import com.ktb.eatbookappbackend.global.reponse.SuccessResponseDTO;
 import com.ktb.eatbookappbackend.oauth.dto.SignupRequestDTO;
 import com.ktb.eatbookappbackend.oauth.dto.SignupResponseDTO;
 import com.ktb.eatbookappbackend.oauth.jwt.JwtUtil;
-import com.ktb.eatbookappbackend.oauth.message.SignupSuccessCode;
+import com.ktb.eatbookappbackend.oauth.message.AuthSuccessCode;
 import com.ktb.eatbookappbackend.oauth.service.SignupService;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
@@ -57,6 +57,6 @@ public class SignupController {
         headers.add(REFRESH_TOKEN.getValue(), refreshToken);
         headers.add("Access-Control-Expose-Headers", String.join(", ", ACCESS_TOKEN.getValue(), REFRESH_TOKEN.getValue()));
 
-        return SuccessResponse.toResponseEntity(SignupSuccessCode.SIGN_UP_COMPLETED, signupResponseDTO, headers);
+        return SuccessResponse.toResponseEntity(AuthSuccessCode.SIGN_UP_COMPLETED, signupResponseDTO, headers);
     }
 }

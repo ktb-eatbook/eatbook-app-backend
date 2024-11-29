@@ -10,7 +10,7 @@ import com.ktb.eatbookappbackend.oauth.dto.MemberDTO;
 import com.ktb.eatbookappbackend.oauth.dto.MemberSettingDTO;
 import com.ktb.eatbookappbackend.oauth.dto.SignupResponseDTO;
 import com.ktb.eatbookappbackend.oauth.exception.SignupException;
-import com.ktb.eatbookappbackend.oauth.message.SignupErrorCode;
+import com.ktb.eatbookappbackend.oauth.message.AuthErrorCode;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -33,7 +33,7 @@ public class SignupService {
     @Transactional
     public Member createMember(String email, String nickname, String profileImageUrl, Gender gender, AgeGroup ageGroup) {
         if (memberRepository.existsByEmail(email)) {
-            throw new SignupException(SignupErrorCode.EMAIL_DUPLICATED);
+            throw new SignupException(AuthErrorCode.EMAIL_DUPLICATED);
         }
 
         Member member = Member.builder()
