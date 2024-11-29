@@ -1,8 +1,5 @@
 package com.ktb.eatbookappbackend.oauth.jwt;
 
-import static com.ktb.eatbookappbackend.oauth.jwt.constant.TokenType.ACCESS_TOKEN;
-import static org.springframework.http.HttpHeaders.SET_COOKIE;
-
 import com.ktb.eatbookappbackend.domain.member.exception.MemberException;
 import com.ktb.eatbookappbackend.domain.member.message.MemberErrorCode;
 import com.ktb.eatbookappbackend.domain.member.repository.MemberRepository;
@@ -14,7 +11,6 @@ import com.ktb.eatbookappbackend.entity.RefreshToken;
 import com.ktb.eatbookappbackend.entity.constant.Role;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
@@ -28,9 +24,8 @@ public class TokenService {
 
     public String renewToken(HttpServletResponse response, String refreshToken) {
         String renewAccessToken = createAccessToken(refreshToken);
-        ResponseCookie accessCookie = cookieService.createCookie(ACCESS_TOKEN.getValue(), renewAccessToken);
-        response.addHeader(SET_COOKIE, accessCookie.toString());
-        return accessCookie.getValue();
+        response.setHeader("Authorization", "Bearer " + renewAccessToken);
+        return renewAccessToken;
     }
 
     public String createAccessToken(final String refreshToken) {
