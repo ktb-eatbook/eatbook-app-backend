@@ -54,7 +54,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
                 String signupToken = jwtUtil.generateSignupToken(email, nickname, profileImage);
 
                 String redirectUrl = UriComponentsBuilder.fromUriString(
-                        apiBaseUrl + "/api/signup/additional-info")
+                        frontendDomain + "/additional-info")
                     .queryParam("token", signupToken)
                     .build()
                     .toUriString();
@@ -64,6 +64,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
                 return;
             }
 
+            log.info("기존 사용자, 성공적으로 로그인");
             String accessToken = jwtUtil.generateAccessToken(oAuth2member.getMemberId(), oAuth2member.getMemberRole());
             String refreshToken = jwtUtil.generateRefreshToken(oAuth2member.getMemberId());
             log.info("생성한 access token: " + accessToken);
