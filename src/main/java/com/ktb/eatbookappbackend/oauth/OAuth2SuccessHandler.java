@@ -1,18 +1,12 @@
 package com.ktb.eatbookappbackend.oauth;
 
-import static com.ktb.eatbookappbackend.oauth.jwt.constant.TokenType.ACCESS_TOKEN;
-import static com.ktb.eatbookappbackend.oauth.jwt.constant.TokenType.REFRESH_TOKEN;
-import static org.springframework.http.HttpHeaders.SET_COOKIE;
-
-import com.ktb.eatbookappbackend.oauth.jwt.CookieService;
+import com.ktb.eatbookappbackend.global.util.AESUtil;
 import com.ktb.eatbookappbackend.oauth.jwt.JwtUtil;
-import com.ktb.eatbookappbackend.oauth.jwt.TokenService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.ResponseCookie;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
@@ -27,8 +21,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     private String frontendDomain;
 
     private final JwtUtil jwtUtil;
-    private final CookieService cookieService;
-    private final TokenService tokenService;
+    private final AESUtil aesUtil;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
@@ -62,19 +55,13 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
             }
 
             log.info("기존 사용자, 성공적으로 로그인");
-            String accessToken = jwtUtil.generateAccessToken(oAuth2member.getMemberId(), oAuth2member.getMemberRole());
-            String refreshToken = jwtUtil.generateRefreshToken(oAuth2member.getMemberId());
-            log.info("생성한 access token: " + accessToken);
-            log.info("생성한 refresh token: " + refreshToken);
-            tokenService.saveRefreshToken(refreshToken, oAuth2member.getMemberId());
-
-            ResponseCookie accessTokenCookie = cookieService.createCookie(ACCESS_TOKEN.getValue(), accessToken);
-            ResponseCookie refreshTokenCookie = cookieService.createCookie(REFRESH_TOKEN.getValue(), refreshToken);
-
-            response.addHeader(SET_COOKIE, accessTokenCookie.toString());
-            response.addHeader(SET_COOKIE, refreshTokenCookie.toString());
-
-            response.sendRedirect(frontendDomain);
+            OAuth2MemberInfo memberInfo = oAuth2member.getMemberInfo();
+            String email = memberInfo.getEmail();
+            String encryptedEmail = aesUtil.encrypt(email);
+            String redirectUrl = frontendDomain + "/email-login#" + encryptedEmail;
+            log.info("Encrypted Email: {}", encryptedEmail);
+            log.info("Redirect URL: {}", redirectUrl);
+            response.sendRedirect(redirectUrl);
         } catch (Exception e) {
             log.error("OAuth2 Login 성공 후 예외 발생 : {}", e.getMessage());
         }
