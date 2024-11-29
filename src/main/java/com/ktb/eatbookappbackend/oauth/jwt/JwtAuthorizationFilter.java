@@ -14,6 +14,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Pattern;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -34,13 +35,22 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
     private static final List<String> EXCLUDED_PATHS = List.of(
         "/api/signup/additional-info",
         "/api/signup",
-        "/favicon.ico"
+        "/favicon.ico",
+        "/api/novel/.*",              // /api/novel/{novelId}
+        "/api/novel/.*/episodes",     // /api/novel/{novelId}/episodes
+        "/api/search/log",
+        "/api/search/novels"
     );
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
         String path = request.getRequestURI();
-        return EXCLUDED_PATHS.contains(path);
+        return matchesExcludedPaths(path);
+    }
+
+    private boolean matchesExcludedPaths(String path) {
+        return EXCLUDED_PATHS.stream()
+            .anyMatch(pattern -> Pattern.matches(pattern.replace(".*", ".*"), path));
     }
 
     @Override
