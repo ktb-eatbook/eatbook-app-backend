@@ -40,7 +40,6 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
         String path = request.getRequestURI();
-        log.info("토큰 확인을 수행하지 않는 path입니다. path: " + path);
         return EXCLUDED_PATHS.contains(path);
     }
 
