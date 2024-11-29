@@ -1,13 +1,8 @@
 package com.ktb.eatbookappbackend.oauth.dto;
 
-public record SignupResponseDTO(
-    String id,
-    String nickname,
-    String profileImage,
-    String email
-) {
+public record SignupResponseDTO(MemberDTO member) {
 
-    public static SignupResponseDTO of(String id, String nickname, String profileImage, String email) {
-        return new SignupResponseDTO(id, nickname, profileImage, email);
+    public static SignupResponseDTO of(MemberDTO member) {
+        return new SignupResponseDTO(member);
     }
 }
