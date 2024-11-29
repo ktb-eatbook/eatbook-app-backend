@@ -8,7 +8,6 @@ import com.ktb.eatbookappbackend.global.reponse.SuccessResponse;
 import com.ktb.eatbookappbackend.global.reponse.SuccessResponseDTO;
 import com.ktb.eatbookappbackend.oauth.dto.SignupRequestDTO;
 import com.ktb.eatbookappbackend.oauth.dto.SignupResponseDTO;
-import com.ktb.eatbookappbackend.oauth.jwt.CookieService;
 import com.ktb.eatbookappbackend.oauth.jwt.JwtUtil;
 import com.ktb.eatbookappbackend.oauth.message.SignupSuccessCode;
 import com.ktb.eatbookappbackend.oauth.service.SignupService;
@@ -31,17 +30,16 @@ public class SignupController {
 
     private final JwtUtil jwtUtil;
     private final SignupService signupService;
-    private final CookieService cookieService;
 
     @PostMapping()
     public ResponseEntity<SuccessResponseDTO> getSignupInfo(@RequestBody SignupRequestDTO request) {
-        String token = request.token();
+        String signupToken = request.token();
 
-        if (!jwtUtil.validateToken(token)) {
+        if (!jwtUtil.validateSignupToken(signupToken)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         }
 
-        Map<String, String> signupInfo = jwtUtil.extractSignupClaims(token);
+        Map<String, String> signupInfo = jwtUtil.extractSignupClaims(signupToken);
         SignupResponseDTO signupResponseDTO = signupService.signUp(
             signupInfo.get("email"),
             signupInfo.get("nickname"),
@@ -57,7 +55,6 @@ public class SignupController {
         HttpHeaders headers = new HttpHeaders();
         headers.add(ACCESS_TOKEN.getValue(), accessToken);
         headers.add(REFRESH_TOKEN.getValue(), refreshToken);
-        // 응답 헤더를 노출하도록 설정
         headers.add("Access-Control-Expose-Headers", String.join(", ", ACCESS_TOKEN.getValue(), REFRESH_TOKEN.getValue()));
 
         return SuccessResponse.toResponseEntity(SignupSuccessCode.SIGN_UP_COMPLETED, signupResponseDTO, headers);

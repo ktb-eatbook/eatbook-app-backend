@@ -3,6 +3,7 @@ package com.ktb.eatbookappbackend.oauth.jwt;
 import static com.ktb.eatbookappbackend.oauth.jwt.constant.TokenType.ACCESS_TOKEN;
 import static com.ktb.eatbookappbackend.oauth.jwt.constant.TokenType.REFRESH_TOKEN;
 
+import com.ktb.eatbookappbackend.domain.refreshToken.repository.RefreshTokenRepository;
 import com.ktb.eatbookappbackend.entity.constant.Role;
 import jakarta.annotation.PostConstruct;
 import java.util.HashMap;
@@ -26,6 +27,7 @@ public class JwtUtil {
     private static final String ROLE_CLAIM = "role";
     private static final String OAUTH_PROVIDER_CLAIM = "provider";
     private static final String MEMBER_ID_CLAIM = "memberId";
+    private final RefreshTokenRepository refreshTokenRepository;
 
     @Value("${spring.security.jwt.access.expiration}")
     private long accessTokenExpirationPeriod;
@@ -43,6 +45,10 @@ public class JwtUtil {
     private String secretCode;
 
     private SecretKey secretKey;
+
+    public JwtUtil(RefreshTokenRepository refreshTokenRepository) {
+        this.refreshTokenRepository = refreshTokenRepository;
+    }
 
     @PostConstruct
     public void init() {
@@ -77,7 +83,7 @@ public class JwtUtil {
             .compact();
     }
 
-    public boolean validateToken(String token) {
+    private boolean isJwtValid(String token) {
         try {
             Jwts.parser()
                 .verifyWith(secretKey)
@@ -86,15 +92,35 @@ public class JwtUtil {
                 .getPayload();
             return true;
         } catch (ExpiredJwtException e) {
-            log.info("만료된 JWT token 입니다.");
+            log.info("만료된 JWT token입니다.");
         } catch (SecurityException | MalformedJwtException e) {
-            log.error("유효하지 않는 JWT 서명 입니다.");
+            log.error("유효하지 않은 JWT 서명입니다.");
         } catch (UnsupportedJwtException e) {
-            log.error("지원되지 않는 JWT 토큰 입니다.");
+            log.error("지원되지 않는 JWT 토큰입니다.");
         } catch (IllegalArgumentException e) {
-            log.error("잘못된 JWT 토큰 입니다.");
+            log.error("잘못된 JWT 토큰입니다.");
         }
         return false;
+    }
+
+    public boolean validateSignupToken(String token) {
+        return isJwtValid(token);
+    }
+
+    public boolean validateAccessToken(String token) {
+        return isJwtValid(token);
+    }
+
+    public boolean validateRefreshToken(String token) {
+        if (!isJwtValid(token)) {
+            return false;
+        }
+
+        boolean existsInDb = refreshTokenRepository.findById(token).isPresent();
+        if (!existsInDb) {
+            log.error("Refresh token이 데이터베이스에 존재하지 않습니다.");
+        }
+        return existsInDb;
     }
 
     public JwtClaimDTO extractClaims(String token) {

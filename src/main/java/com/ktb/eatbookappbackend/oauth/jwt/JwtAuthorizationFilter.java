@@ -71,33 +71,29 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
         log.info("accessToken: " + accessToken);
         log.info("refreshToken: " + refreshToken);
 
-        // case1. accessToken이 유효한 경우
-        if (accessToken != null && jwtUtil.validateToken(accessToken)) {
-            log.info("case1");
+        if (accessToken != null && jwtUtil.validateAccessToken(accessToken)) {
+            log.info("accessToken이 유효합니다.");
             setAuthInSecurityContext(accessToken);
             filterChain.doFilter(request, response);
             return;
         }
 
-        // case2. accessToken이 유효하지 않고 refreshToken이 유효하면 accessToken 갱신
-        if (refreshToken != null && jwtUtil.validateToken(refreshToken)) {
-            log.info("case2");
+        if (refreshToken != null && jwtUtil.validateRefreshToken(refreshToken)) {
+            log.info("accessToken이 유효하지 않고 refreshToken이 유효합니다.");
             accessToken = tokenService.renewToken(response, refreshToken);
             setAuthInSecurityContext(accessToken);
             filterChain.doFilter(request, response);
             return;
         }
 
-        // case3. accessToken과 refreshToken이 모두 유효하지 않으면 에러 응답 반환
         if (accessToken != null) {
-            log.info("case3");
+            log.info("accessToken이 모두 유효하지 않아 삭제합니다.");
             cookieService.deleteCookie(response, ACCESS_TOKEN.getValue());
         }
 
-        if (!jwtUtil.validateToken(refreshToken)) {
-            log.info("refresh token이 유효하지 않음.");
+        if (!jwtUtil.validateRefreshToken(refreshToken)) {
+            log.info("refreshToken이 유효하지 않아 삭제합니다.");
             cookieService.deleteCookie(response, REFRESH_TOKEN.getValue());
-//            tokenService.deleteRefreshToken(refreshToken);
         }
 
         throw new TokenException(TokenErrorCode.INVALID_TOKEN);
