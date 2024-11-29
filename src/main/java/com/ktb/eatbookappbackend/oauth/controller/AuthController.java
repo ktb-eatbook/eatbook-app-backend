@@ -21,7 +21,6 @@ import com.ktb.eatbookappbackend.oauth.jwt.JwtUtil;
 import com.ktb.eatbookappbackend.oauth.jwt.TokenService;
 import com.ktb.eatbookappbackend.oauth.message.AuthSuccessCode;
 import com.ktb.eatbookappbackend.oauth.service.AuthService;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.Map;
@@ -110,20 +109,7 @@ public class AuthController {
 
     @DeleteMapping("/logout")
     public ResponseEntity<SuccessResponseDTO> logout(HttpServletRequest request, HttpServletResponse response) {
-        Cookie[] cookies = request.getCookies();
-
-        String accessToken = cookieService.extractCookie(cookies, ACCESS_TOKEN.getValue());
-        String refreshToken = cookieService.extractCookie(cookies, REFRESH_TOKEN.getValue());
-
-        if (accessToken != null) {
-            cookieService.deleteCookie(response, ACCESS_TOKEN.getValue());
-        }
-
-        if (refreshToken != null && jwtUtil.validateRefreshToken(refreshToken)) {
-            refreshTokenRepository.deleteById(refreshToken);
-            cookieService.deleteCookie(response, REFRESH_TOKEN.getValue());
-        }
-
+        cookieService.clearAuthCookies(request, response);
         return SuccessResponse.toResponseEntity(AuthSuccessCode.LOGOUT_COMPLETED);
     }
 
@@ -135,19 +121,7 @@ public class AuthController {
         @AuthenticationPrincipal String memberId
     ) {
         memberService.deleteMember(memberId);
-
-        Cookie[] cookies = request.getCookies();
-        String accessToken = cookieService.extractCookie(cookies, ACCESS_TOKEN.getValue());
-        String refreshToken = cookieService.extractCookie(cookies, REFRESH_TOKEN.getValue());
-
-        if (accessToken != null) {
-            cookieService.deleteCookie(response, ACCESS_TOKEN.getValue());
-        }
-
-        if (refreshToken != null && jwtUtil.validateRefreshToken(refreshToken)) {
-            refreshTokenRepository.deleteById(refreshToken);
-            cookieService.deleteCookie(response, REFRESH_TOKEN.getValue());
-        }
+        cookieService.clearAuthCookies(request, response);
         return SuccessResponse.toResponseEntity(AuthSuccessCode.DELETE_MEMBER_COMPLETED);
     }
 }
