@@ -15,7 +15,6 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 public class GlobalExceptionHandler {
 
     @ExceptionHandler({
-        MethodArgumentTypeMismatchException.class,
         MissingServletRequestParameterException.class,
         ConstraintViolationException.class,
         MethodArgumentNotValidException.class,
