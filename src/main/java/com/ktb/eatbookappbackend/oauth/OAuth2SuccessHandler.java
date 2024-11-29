@@ -26,9 +26,6 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     @Value("${app.properties.frontendDomain}")
     private String frontendDomain;
 
-    @Value("${app.properties.apiBaseUrl}")
-    private String apiBaseUrl;
-
     private final JwtUtil jwtUtil;
     private final CookieService cookieService;
     private final TokenService tokenService;
@@ -41,8 +38,8 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
             OAuth2CustomMember oAuth2member = (OAuth2CustomMember) authentication.getPrincipal();
 
             // 신규 사용자 처리
-            boolean isNewUser = oAuth2member.getMember() == null;
-            if (isNewUser) {
+            boolean isNewMember = oAuth2member.getMember() == null;
+            if (isNewMember) {
                 log.info("신규 사용자, 추가 정보 입력 페이지로 리다이렉트");
                 OAuth2MemberInfo memberInfo = oAuth2member.getMemberInfo();
 

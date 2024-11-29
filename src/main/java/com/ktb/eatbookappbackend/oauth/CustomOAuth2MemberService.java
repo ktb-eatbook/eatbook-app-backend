@@ -36,9 +36,9 @@ public class CustomOAuth2MemberService implements OAuth2UserService<OAuth2UserRe
         String email = extractAttributes.getOAuth2MemberInfo().getEmail();
         Member member = memberRepository.findByEmail(email).orElse(null);
 
-        boolean isNewUser = member == null;
+        boolean isNewMember = member == null;
 
-        if (isNewUser) {
+        if (isNewMember) {
             log.info("신규 사용자가 OAuth2 로그인: {}", extractAttributes);
             return new OAuth2CustomMember(
                 Collections.singleton(new SimpleGrantedAuthority(Role.MEMBER.toString())),
