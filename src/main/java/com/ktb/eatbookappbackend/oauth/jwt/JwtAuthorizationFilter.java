@@ -9,7 +9,6 @@ import com.ktb.eatbookappbackend.global.reponse.FailureResponseDTO;
 import com.ktb.eatbookappbackend.oauth.message.TokenErrorCode;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -30,7 +29,6 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
     private final JwtUtil jwtUtil;
     private final TokenService tokenService;
-    private final CookieService cookieService;
 
     private static final List<String> EXCLUDED_PATHS = List.of(
         "/api/signup",
@@ -56,46 +54,37 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
         throws IOException, ServletException {
-        Cookie[] cookies = request.getCookies();
         String path = request.getRequestURI();
         log.info("doFilterInternal에 들어온 request의 Path: " + path);
 
-        if (cookies == null) {
-            log.info("쿠키가 비어있습니다.");
+        String accessToken = request.getHeader(ACCESS_TOKEN.getValue());
+        String refreshToken = request.getHeader(REFRESH_TOKEN.getValue());
+        log.info("AccessToken: " + accessToken);
+        log.info("RefreshToken: " + refreshToken);
+
+        if (accessToken == null && refreshToken == null) {
+            log.info("토큰이 모두 비어있습니다.");
             sendErrorResponse(response);
             return;
         }
 
-        String accessToken = cookieService.extractCookie(cookies, ACCESS_TOKEN.getValue());
-        String refreshToken = cookieService.extractCookie(cookies, REFRESH_TOKEN.getValue());
-        log.info("accessToken: " + accessToken);
-        log.info("refreshToken: " + refreshToken);
-
         if (accessToken != null && jwtUtil.validateAccessToken(accessToken)) {
-            log.info("accessToken이 유효합니다.");
+            log.info("AccessToken이 유효합니다.");
             setAuthInSecurityContext(accessToken);
             filterChain.doFilter(request, response);
             return;
         }
 
         if (refreshToken != null && jwtUtil.validateRefreshToken(refreshToken)) {
-            log.info("accessToken이 유효하지 않고 refreshToken이 유효합니다.");
+            log.info("AccessToken이 유효하지 않고 RefreshToken이 유효합니다.");
             accessToken = tokenService.renewToken(response, refreshToken);
             setAuthInSecurityContext(accessToken);
             filterChain.doFilter(request, response);
             return;
         }
 
-        if (accessToken != null) {
-            log.info("accessToken이 모두 유효하지 않아 삭제합니다.");
-            cookieService.deleteCookie(response, ACCESS_TOKEN.getValue());
-        }
-
-        if (refreshToken != null && !jwtUtil.validateRefreshToken(refreshToken)) {
-            log.info("refreshToken이 유효하지 않아 삭제합니다.");
-            cookieService.deleteCookie(response, REFRESH_TOKEN.getValue());
-        }
-
+        log.info("토큰이 모두 유효하지 않습니다.");
+        tokenService.deleteRefreshToken(refreshToken);
         sendErrorResponse(response);
     }
 

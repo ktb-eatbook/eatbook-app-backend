@@ -32,6 +32,8 @@ public class TokenService {
     }
 
     public void deleteRefreshToken(String refreshToken) {
-        refreshTokenRepository.deleteById(refreshToken);
+        if (refreshToken != null && jwtUtil.validateRefreshToken(refreshToken)) {
+            refreshTokenRepository.deleteById(refreshToken);
+        }
     }
 }

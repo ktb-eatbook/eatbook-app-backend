@@ -7,7 +7,6 @@ import com.ktb.eatbookappbackend.domain.member.exception.MemberException;
 import com.ktb.eatbookappbackend.domain.member.message.MemberErrorCode;
 import com.ktb.eatbookappbackend.domain.member.repository.MemberRepository;
 import com.ktb.eatbookappbackend.domain.member.service.MemberService;
-import com.ktb.eatbookappbackend.domain.refreshToken.repository.RefreshTokenRepository;
 import com.ktb.eatbookappbackend.entity.Member;
 import com.ktb.eatbookappbackend.entity.constant.Role;
 import com.ktb.eatbookappbackend.global.reponse.SuccessResponse;
@@ -17,13 +16,11 @@ import com.ktb.eatbookappbackend.oauth.dto.EmailLoginRequestDTO;
 import com.ktb.eatbookappbackend.oauth.dto.MemberDTO;
 import com.ktb.eatbookappbackend.oauth.dto.SignupRequestDTO;
 import com.ktb.eatbookappbackend.oauth.dto.SignupResponseDTO;
-import com.ktb.eatbookappbackend.oauth.jwt.CookieService;
 import com.ktb.eatbookappbackend.oauth.jwt.JwtUtil;
 import com.ktb.eatbookappbackend.oauth.jwt.TokenService;
 import com.ktb.eatbookappbackend.oauth.message.AuthSuccessCode;
 import com.ktb.eatbookappbackend.oauth.service.AuthService;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -47,10 +44,8 @@ public class AuthController {
     private final JwtUtil jwtUtil;
     private final AESUtil aesUtil;
     private final TokenService tokenService;
-    private final CookieService cookieService;
     private final AuthService authService;
     private final MemberRepository memberRepository;
-    private final RefreshTokenRepository refreshTokenRepository;
     private final MemberService memberService;
 
     @PostMapping("/email-login")
@@ -111,8 +106,9 @@ public class AuthController {
     }
 
     @DeleteMapping("/logout")
-    public ResponseEntity<SuccessResponseDTO> logout(HttpServletRequest request, HttpServletResponse response) {
-        cookieService.clearAuthCookies(request, response);
+    public ResponseEntity<SuccessResponseDTO> logout(HttpServletRequest request) {
+        String refreshToken = request.getHeader(REFRESH_TOKEN.getValue());
+        tokenService.deleteRefreshToken(refreshToken);
         return SuccessResponse.toResponseEntity(AuthSuccessCode.LOGOUT_COMPLETED);
     }
 
@@ -120,11 +116,11 @@ public class AuthController {
     @DeleteMapping("/members")
     public ResponseEntity<SuccessResponseDTO> deleteMember(
         HttpServletRequest request,
-        HttpServletResponse response,
         @AuthenticationPrincipal String memberId
     ) {
         memberService.deleteMember(memberId);
-        cookieService.clearAuthCookies(request, response);
+        String refreshToken = request.getHeader(REFRESH_TOKEN.getValue());
+        tokenService.deleteRefreshToken(refreshToken);
         return SuccessResponse.toResponseEntity(AuthSuccessCode.DELETE_MEMBER_COMPLETED);
     }
 }
