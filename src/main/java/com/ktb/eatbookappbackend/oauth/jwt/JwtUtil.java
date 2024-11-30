@@ -3,7 +3,12 @@ package com.ktb.eatbookappbackend.oauth.jwt;
 import static com.ktb.eatbookappbackend.oauth.jwt.constant.TokenType.ACCESS_TOKEN;
 import static com.ktb.eatbookappbackend.oauth.jwt.constant.TokenType.REFRESH_TOKEN;
 
+import com.ktb.eatbookappbackend.domain.member.exception.MemberException;
+import com.ktb.eatbookappbackend.domain.member.message.MemberErrorCode;
+import com.ktb.eatbookappbackend.domain.member.repository.MemberRepository;
 import com.ktb.eatbookappbackend.domain.refreshToken.repository.RefreshTokenRepository;
+import com.ktb.eatbookappbackend.entity.Member;
+import com.ktb.eatbookappbackend.entity.RefreshToken;
 import com.ktb.eatbookappbackend.entity.constant.Role;
 import jakarta.annotation.PostConstruct;
 import java.util.HashMap;
@@ -28,6 +33,7 @@ public class JwtUtil {
     private static final String OAUTH_PROVIDER_CLAIM = "provider";
     private static final String MEMBER_ID_CLAIM = "memberId";
     private final RefreshTokenRepository refreshTokenRepository;
+    private final MemberRepository memberRepository;
 
     @Value("${spring.security.jwt.access.expiration}")
     private long accessTokenExpirationPeriod;
@@ -46,8 +52,9 @@ public class JwtUtil {
 
     private SecretKey secretKey;
 
-    public JwtUtil(RefreshTokenRepository refreshTokenRepository) {
+    public JwtUtil(RefreshTokenRepository refreshTokenRepository, MemberRepository memberRepository) {
         this.refreshTokenRepository = refreshTokenRepository;
+        this.memberRepository = memberRepository;
     }
 
     @PostConstruct
@@ -72,8 +79,7 @@ public class JwtUtil {
     public String generateRefreshToken(String memberId) {
         Date now = new Date();
         Date expireDate = new Date(now.getTime() + refreshTokenExpirationPeriod);
-
-        return Jwts.builder()
+        String refreshToken = Jwts.builder()
             .issuer("eatbook")
             .subject(REFRESH_TOKEN.getValue())
             .claim(MEMBER_ID_CLAIM, memberId)
@@ -81,6 +87,13 @@ public class JwtUtil {
             .expiration(expireDate)
             .signWith(secretKey, Jwts.SIG.HS512)
             .compact();
+        saveRefreshToken(refreshToken, memberId);
+        return refreshToken;
+    }
+
+    public void saveRefreshToken(String refreshToken, String memberId) {
+        Member member = memberRepository.findById(memberId).orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND));
+        refreshTokenRepository.save(new RefreshToken(refreshToken, member));
     }
 
     private boolean isJwtValid(String token) {

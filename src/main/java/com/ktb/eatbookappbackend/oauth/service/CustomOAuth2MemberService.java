@@ -36,7 +36,7 @@ public class CustomOAuth2MemberService implements OAuth2UserService<OAuth2UserRe
             .getProviderDetails().getUserInfoEndpoint().getUserNameAttributeName();
         OAuthAttributes extractAttributes = OAuthAttributes.of(userNameAttributeName, oAuth2User.getAttributes());
         String email = extractAttributes.getOAuth2MemberInfo().getEmail();
-        Member member = memberRepository.findByEmail(email).orElse(null);
+        Member member = memberRepository.findByEmailAndDeletedAtIsNull(email).orElse(null);
 
         boolean isNewMember = member == null;
 

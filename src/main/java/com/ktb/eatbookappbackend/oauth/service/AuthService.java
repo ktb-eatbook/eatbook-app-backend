@@ -32,7 +32,7 @@ public class AuthService {
 
     @Transactional
     public Member createMember(String email, String nickname, String profileImageUrl, Gender gender, AgeGroup ageGroup) {
-        if (memberRepository.existsByEmail(email)) {
+        if (memberRepository.existsByEmailAndDeletedAtIsNull(email)) {
             throw new SignupException(AuthErrorCode.EMAIL_DUPLICATED);
         }
 

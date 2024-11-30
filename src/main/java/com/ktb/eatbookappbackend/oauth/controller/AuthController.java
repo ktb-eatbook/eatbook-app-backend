@@ -59,11 +59,11 @@ public class AuthController {
         String email = aesUtil.decrypt(encryptedEmail);
         log.info("Decrypted Email: {}", email);
 
-        Member member = memberRepository.findByEmail(email).orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND));
+        Member member = memberRepository.findByEmailAndDeletedAtIsNull(email)
+            .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND));
 
         String accessToken = jwtUtil.generateAccessToken(member.getId(), member.getRole());
         String refreshToken = jwtUtil.generateRefreshToken(member.getId());
-        tokenService.saveRefreshToken(refreshToken, member.getId());
 
         HttpHeaders headers = new HttpHeaders();
         headers.add(ACCESS_TOKEN.getValue(), accessToken);
