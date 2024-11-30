@@ -14,6 +14,7 @@ import com.ktb.eatbookappbackend.global.reponse.SuccessResponse;
 import com.ktb.eatbookappbackend.global.reponse.SuccessResponseDTO;
 import com.ktb.eatbookappbackend.global.util.AESUtil;
 import com.ktb.eatbookappbackend.oauth.dto.EmailLoginRequestDTO;
+import com.ktb.eatbookappbackend.oauth.dto.MemberDTO;
 import com.ktb.eatbookappbackend.oauth.dto.SignupRequestDTO;
 import com.ktb.eatbookappbackend.oauth.dto.SignupResponseDTO;
 import com.ktb.eatbookappbackend.oauth.jwt.CookieService;
@@ -62,6 +63,8 @@ public class AuthController {
         Member member = memberRepository.findByEmailAndDeletedAtIsNull(email)
             .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND));
 
+        MemberDTO memberDTO = authService.login(member);
+
         String accessToken = jwtUtil.generateAccessToken(member.getId(), member.getRole());
         String refreshToken = jwtUtil.generateRefreshToken(member.getId());
 
@@ -75,7 +78,7 @@ public class AuthController {
         // 응답 헤더를 노출하도록 설정
         headers.add("Access-Control-Expose-Headers", String.join(", ", ACCESS_TOKEN.getValue(), REFRESH_TOKEN.getValue()));
 
-        return SuccessResponse.toResponseEntity(AuthSuccessCode.LOGIN_COMPLETED, null, headers);
+        return SuccessResponse.toResponseEntity(AuthSuccessCode.LOGIN_COMPLETED, memberDTO, headers);
     }
 
     @PostMapping("/signup")

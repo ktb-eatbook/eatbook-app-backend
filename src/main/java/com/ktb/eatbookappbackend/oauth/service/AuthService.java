@@ -1,5 +1,7 @@
 package com.ktb.eatbookappbackend.oauth.service;
 
+import com.ktb.eatbookappbackend.domain.bookmark.repository.BookmarkRepository;
+import com.ktb.eatbookappbackend.domain.favorite.repository.FavoriteRepository;
 import com.ktb.eatbookappbackend.domain.member.repository.MemberRepository;
 import com.ktb.eatbookappbackend.domain.memberSetting.repository.MemberSettingRepository;
 import com.ktb.eatbookappbackend.entity.Member;
@@ -22,12 +24,21 @@ public class AuthService {
 
     private final MemberRepository memberRepository;
     private final MemberSettingRepository memberSettingRepository;
+    private final BookmarkRepository bookmarkRepository;
+    private final FavoriteRepository favoriteRepository;
 
     public SignupResponseDTO signUp(String email, String nickname, String profileImageUrl, Gender gender, AgeGroup ageGroup) {
         Member newMember = createMember(email, nickname, profileImageUrl, gender, ageGroup);
         MemberSettingDTO memberSettingDTO = MemberSettingDTO.of(newMember.getMemberSetting());
         MemberDTO memberDTO = MemberDTO.of(newMember, List.of(), List.of(), memberSettingDTO);
         return SignupResponseDTO.of(memberDTO);
+    }
+
+    public MemberDTO login(Member member) {
+        MemberSettingDTO memberSetting = MemberSettingDTO.of(member.getMemberSetting());
+        List<String> bookmarkedNovelIds = bookmarkRepository.findNovelIdsByMemberId(member.getId());
+        List<String> favoritedNovelIds = favoriteRepository.findNovelIdsByMemberId(member.getId());
+        return MemberDTO.of(member, bookmarkedNovelIds, favoritedNovelIds, memberSetting);
     }
 
     @Transactional
