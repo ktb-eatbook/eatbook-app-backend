@@ -12,7 +12,7 @@ public enum AuthSuccessCode implements MessageCode {
     LOGIN_COMPLETED("성공적으로 로그인했습니다.", HttpStatus.OK),
     LOGOUT_COMPLETED("성공적으로 로그아웃했습니다.", HttpStatus.OK),
     SIGN_UP_COMPLETED("성공적으로 회원가입했습니다.", HttpStatus.CREATED),
-    DELETE_MEMBER_COMPLETED("성공적으로 회원탈퇴했습니다.", HttpStatus.NO_CONTENT);
+    DELETE_MEMBER_COMPLETED("성공적으로 회원탈퇴했습니다.", HttpStatus.OK);
 
     private final String message;
     private final HttpStatus status;
