@@ -5,7 +5,7 @@ import com.ktb.eatbookappbackend.entity.constant.Gender;
 
 public record SignupRequestDTO(
     String token,
-    int ageGroup,  // 숫자 값으로 요청 (20, 30 등)
+    int ageGroup,
     Gender gender
 ) {
 
