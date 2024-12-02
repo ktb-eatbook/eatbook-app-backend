@@ -1,5 +1,7 @@
 package com.ktb.eatbookappbackend.entity.constant;
 
+import com.ktb.eatbookappbackend.domain.member.exception.MemberException;
+import com.ktb.eatbookappbackend.domain.member.message.MemberErrorCode;
 import java.util.Arrays;
 
 public enum AgeGroup {
@@ -28,6 +30,6 @@ public enum AgeGroup {
         return Arrays.stream(AgeGroup.values())
             .filter(group -> group.value == value)
             .findFirst()
-            .orElseThrow(() -> new IllegalArgumentException("Invalid age group value: " + value));
+            .orElseThrow(() -> new MemberException(MemberErrorCode.AGE_GROUP_NOT_FOUND));
     }
 }
