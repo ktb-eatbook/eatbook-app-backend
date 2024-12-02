@@ -4,7 +4,6 @@ import static com.ktb.eatbookappbackend.search.fixture.SearchNovelFixture.NOVEL_
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.spy;
@@ -80,7 +79,7 @@ public class SearchNovelServiceTest {
     public void should_ReturnSearchResultOrderedByRelevance_WithPaginationInfo_When_ValidInput() {
         // Given
         String searchTerm = "전지적";
-        List<String> expectedTitles = List.of("전지적 에이든 시점", "전지적 강민 시점", "전지적 라빈 시점");
+        List<String> expectedTitles = List.of("전지적 에이든 시점", "전지적 강민 시점", "전지적 라빈 시점", "릴리귀환", "크리스탈귀환", "토니귀환");
         NovelSearchSortOrder order = NovelSearchSortOrder.relevance;
         SearchNovelService spySearchNovelService = spy(searchNovelService);
 
@@ -100,20 +99,15 @@ public class SearchNovelServiceTest {
         assertEquals(totalPage, result.pagination().totalPages());
         assertEquals(novels.size(), result.novels().size());
 
-        List<String> actualTitles = List.of(
-            result.novels().get(0).title(),
-            result.novels().get(1).title(),
-            result.novels().get(2).title()
-        );
-
-        assertTrue(actualTitles.containsAll(expectedTitles), "전지적 키워드를 포함한 소설들의 우선순위가 높아야 합니다.");
+        assertEquals(expectedTitles, result.novels().stream().map(novel -> novel.title()).collect(Collectors.toList()),
+            "전지적 키워드를 포함한 소설들의 우선순위가 높아야 합니다.");
     }
 
     @Test
     public void should_ReturnSearchResultOrderedByLatest_WithPaginationInfo_When_ValidInput() {
         // Given
         String searchTerm = "전지적";
-        List<String> expectedTitles = List.of("릴리귀환", "크리스탈귀환", "토니귀환");
+        List<String> expectedTitles = List.of("릴리귀환", "크리스탈귀환", "토니귀환", "전지적 에이든 시점", "전지적 강민 시점", "전지적 라빈 시점");
         NovelSearchSortOrder order = NovelSearchSortOrder.latest;
         SearchNovelService spySearchNovelService = spy(searchNovelService);
 
@@ -141,7 +135,8 @@ public class SearchNovelServiceTest {
             result.novels().get(2).title()
         );
 
-        assertTrue(actualTitles.containsAll(expectedTitles), "에피소드의 릴리즈 날짜가 최신인 순으로 우선순위가 높아야 합니다.");
+        assertEquals(expectedTitles, result.novels().stream().map(novel -> novel.title()).collect(Collectors.toList()),
+            "에피소드의 릴리즈 날짜가 최신인 순으로 우선순위가 높아야 합니다.");
     }
 
     @Test
