@@ -3,7 +3,6 @@ package com.ktb.eatbookappbackend.domain.novel.controller;
 import com.ktb.eatbookappbackend.domain.novel.message.NovelSuccessCode;
 import com.ktb.eatbookappbackend.domain.novel.service.NovelService;
 import com.ktb.eatbookappbackend.entity.constant.Role;
-import com.ktb.eatbookappbackend.global.authentication.Authenticated;
 import com.ktb.eatbookappbackend.global.reponse.SuccessResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -32,7 +31,6 @@ public class NovelInteractionController {
      * 포함됩니다.
      */
     @Secured(Role.MEMBER_VALUE)
-    @Authenticated
     @PostMapping("{novelId}/bookmark")
     public ResponseEntity<?> addBookmark(
         @PathVariable("novelId") final String novelId,
@@ -50,7 +48,6 @@ public class NovelInteractionController {
      * 포함됩니다.
      */
     @Secured(Role.MEMBER_VALUE)
-    @Authenticated
     @DeleteMapping("{novelId}/bookmark")
     public ResponseEntity<?> deleteBookmark(
         @PathVariable("novelId") final String novelId,
@@ -68,7 +65,6 @@ public class NovelInteractionController {
      * 포함됩니다.
      */
     @Secured(Role.MEMBER_VALUE)
-    @Authenticated
     @PostMapping("{novelId}/favorite")
     public ResponseEntity<?> addFavorite(
         @PathVariable("novelId") final String novelId,
@@ -86,7 +82,6 @@ public class NovelInteractionController {
      * 포함됩니다.
      */
     @Secured(Role.MEMBER_VALUE)
-    @Authenticated
     @DeleteMapping("{novelId}/favorite")
     public ResponseEntity<?> deleteFavorite(
         @PathVariable("novelId") final String novelId,

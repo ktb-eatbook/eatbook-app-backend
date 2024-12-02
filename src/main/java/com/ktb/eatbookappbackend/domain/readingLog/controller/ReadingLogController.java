@@ -4,7 +4,6 @@ import com.ktb.eatbookappbackend.domain.novel.dto.ContinueReadingInfoDTO;
 import com.ktb.eatbookappbackend.domain.readingLog.message.ReadingLogSuccessCode;
 import com.ktb.eatbookappbackend.domain.readingLog.service.ReadingLogService;
 import com.ktb.eatbookappbackend.entity.constant.Role;
-import com.ktb.eatbookappbackend.global.authentication.Authenticated;
 import com.ktb.eatbookappbackend.global.message.GlobalSuccessMessage;
 import com.ktb.eatbookappbackend.global.reponse.SuccessResponseDTO;
 import java.util.Optional;
@@ -33,7 +32,6 @@ public class ReadingLogController {
      * ContinueReadingInfoDTO를 나타내는 마지막으로 읽은 에피소드 정보. 마지막으로 읽은 에피소드가 없는 경우, 이 필드는 null이 됩니다.
      */
     @Secured(Role.MEMBER_VALUE)
-    @Authenticated
     @GetMapping("/novels/{novelId}/last-read")
     public ResponseEntity<?> getLastReadEpisode(
         @PathVariable("novelId") String novelId,

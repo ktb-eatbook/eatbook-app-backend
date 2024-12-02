@@ -4,7 +4,6 @@ import com.ktb.eatbookappbackend.domain.member.dto.BookmarkedNovelsPaginationDTO
 import com.ktb.eatbookappbackend.domain.member.message.MemberSuccessCode;
 import com.ktb.eatbookappbackend.domain.member.service.MemberService;
 import com.ktb.eatbookappbackend.entity.constant.Role;
-import com.ktb.eatbookappbackend.global.authentication.Authenticated;
 import com.ktb.eatbookappbackend.global.message.GlobalSuccessMessage;
 import com.ktb.eatbookappbackend.global.reponse.SuccessResponseDTO;
 import jakarta.validation.constraints.Min;
@@ -36,7 +35,6 @@ public class MemberController {
      * @throws RuntimeException 인증 실패 시
      */
     @Secured(Role.MEMBER_VALUE)
-    @Authenticated
     @GetMapping("/bookmarks")
     public ResponseEntity<?> getMemberBookmarkedNovels(
         @RequestParam(name = "page") @Min(1) final int page,
