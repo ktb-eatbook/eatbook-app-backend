@@ -102,7 +102,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
     private void sendErrorResponse(HttpServletResponse response) throws IOException {
         TokenErrorCode tokenErrorCode = TokenErrorCode.INVALID_TOKEN;
-        log.info("TokenError 발생");
+        log.error("TokenError 발생");
 
         response.setStatus(tokenErrorCode.getStatus().value());
         response.setContentType("application/json");
