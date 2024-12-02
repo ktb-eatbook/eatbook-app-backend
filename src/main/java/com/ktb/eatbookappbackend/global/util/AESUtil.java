@@ -1,12 +1,16 @@
 package com.ktb.eatbookappbackend.global.util;
 
+import com.ktb.eatbookappbackend.oauth.exception.SignupException;
+import com.ktb.eatbookappbackend.oauth.message.AuthErrorCode;
 import java.util.Base64;
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+@Slf4j
 @Component
 public class AESUtil {
 
@@ -31,7 +35,7 @@ public class AESUtil {
      *
      * @param data 암호화할 평문 데이터.
      * @return Base64로 인코딩된 암호화된 데이터 문자열.
-     * @throws RuntimeException 암호화 중에 오류가 발생할 경우.
+     * @throws SignupException 암호화 중에 오류가 발생할 경우.
      */
     public String encrypt(String data) {
         try {
@@ -41,7 +45,8 @@ public class AESUtil {
             byte[] encryptedBytes = cipher.doFinal(data.getBytes());
             return Base64.getEncoder().encodeToString(encryptedBytes);
         } catch (Exception e) {
-            throw new RuntimeException("Encryption failed", e);
+            log.error("암호화에 실패했습니다 : {}", e.getMessage());
+            throw new SignupException(AuthErrorCode.ENCRYPTION_FAILED);
         }
     }
 
@@ -50,7 +55,7 @@ public class AESUtil {
      *
      * @param encryptedData Base64로 인코딩된 암호화된 데이터 문자열. 복호화할 것입니다.
      * @return 복호화된 평문 데이터로, String 형식입니다.
-     * @throws RuntimeException 복호화 중에 오류가 발생할 경우.
+     * @throws SignupException 복호화 중에 오류가 발생할 경우.
      */
     public String decrypt(String encryptedData) {
         try {
@@ -60,7 +65,8 @@ public class AESUtil {
             byte[] decryptedBytes = cipher.doFinal(Base64.getDecoder().decode(encryptedData));
             return new String(decryptedBytes);
         } catch (Exception e) {
-            throw new RuntimeException("Decryption failed", e);
+            log.error("복호화에 실패했습니다 : {}", e.getMessage());
+            throw new SignupException(AuthErrorCode.DECRYPTION_FAILED);
         }
     }
 }
