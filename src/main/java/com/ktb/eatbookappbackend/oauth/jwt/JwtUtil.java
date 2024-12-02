@@ -41,12 +41,6 @@ public class JwtUtil {
     @Value("${spring.security.jwt.refresh.expiration}")
     private long refreshTokenExpirationPeriod;
 
-    @Value("${spring.security.jwt.access.header}")
-    private String accessHeader;
-
-    @Value("${spring.security.jwt.refresh.header}")
-    private String refreshHeader;
-
     @Value("${spring.security.jwt.secret-key}")
     private String secretCode;
 
