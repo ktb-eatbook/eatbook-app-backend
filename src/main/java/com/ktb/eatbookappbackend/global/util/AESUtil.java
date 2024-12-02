@@ -16,13 +16,23 @@ public class AESUtil {
     private static final String ALGORITHM = "AES";
 
     /**
-     * Base64로 인코딩된 키를 바이트 배열로 디코딩하여 SecretKey 생성
+     * AES 암호화/복호화를 위해 SecretKey를 가져오는 메서드입니다. 이 메서드는 애플리케이션 프로퍼티 파일에서 AES_KEY를 가져온 후, Base64로 디코딩하여 byte 배열로 변환합니다. 그런 다음, byte 배열과
+     * ALGORITHM(AES)을 사용하여 SecretKeySpec 객체를 생성합니다.
+     *
+     * @return AES 암호화/복호화에 사용할 SecretKey 객체.
      */
     private SecretKey getSecretKey() {
         byte[] decodedKey = Base64.getDecoder().decode(AES_KEY);
         return new SecretKeySpec(decodedKey, ALGORITHM);
     }
 
+    /**
+     * 이 메서드는 AES 암호화 알고리즘을 사용하여 입력 데이터를 암호화합니다.
+     *
+     * @param data 암호화할 평문 데이터.
+     * @return Base64로 인코딩된 암호화된 데이터 문자열.
+     * @throws RuntimeException 암호화 중에 오류가 발생할 경우.
+     */
     public String encrypt(String data) {
         try {
             SecretKey secretKey = getSecretKey();
@@ -35,6 +45,13 @@ public class AESUtil {
         }
     }
 
+    /**
+     * 이 메서드는 AES 복호화 알고리즘을 사용하여 입력 암호화된 데이터를 복호화합니다.
+     *
+     * @param encryptedData Base64로 인코딩된 암호화된 데이터 문자열. 복호화할 것입니다.
+     * @return 복호화된 평문 데이터로, String 형식입니다.
+     * @throws RuntimeException 복호화 중에 오류가 발생할 경우.
+     */
     public String decrypt(String encryptedData) {
         try {
             SecretKey secretKey = getSecretKey();
