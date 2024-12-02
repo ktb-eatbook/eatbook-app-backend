@@ -17,7 +17,7 @@ public class CorsConfig {
 
     @Bean(name = "customCorsConfigurationSource")
     @Primary
-    public CorsConfigurationSource localDevCorsConfigurationSource() {
+    public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(List.of(frontendDomain));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
