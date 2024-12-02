@@ -90,7 +90,6 @@ public class SearchNovelService {
      * @param pageRequest 결과에 대한 페이지네이션 정보입니다.
      * @return {@link SearchNovelsResultDTO}로, 페이지네이션된 검색 결과와 페이지네이션 정보를 포함합니다.
      */
-    @Transactional(readOnly = true)
     public SearchNovelsResultDTO searchNovelsByLatest(String searchTerm, List<Novel> novels, PageRequest pageRequest) {
         List<Novel> sortedNovels = novels.stream()
             .sorted((novel1, novel2) -> {
@@ -158,15 +157,7 @@ public class SearchNovelService {
         return Integer.compare(authorDistance1, authorDistance2);
     }
 
-    /**
-     * 정렬된 소설 목록과 제공된 페이지 요청에 따라 페이지가 매겨진 소설 결과를 생성합니다.
-     *
-     * @param sortedNovels  정렬된 소설 목록. 특정 기준에 따라 정렬됩니다.
-     * @param pageRequest   결과에 대한 페이지 정보.
-     * @return {@link SearchNovelsResultDTO}로, 페이지가 매겨진 소설과 페이지 정보를 포함합니다.
-     */
-    @Transactional(readOnly = true)
-    protected SearchNovelsResultDTO createPaginatedResult(List<Novel> sortedNovels, PageRequest pageRequest) {
+    private SearchNovelsResultDTO createPaginatedResult(List<Novel> sortedNovels, PageRequest pageRequest) {
         int start = (int) pageRequest.getOffset();
         int end = Math.min(start + pageRequest.getPageSize(), sortedNovels.size());
         List<Novel> paginatedNovels = sortedNovels.subList(start, end);
