@@ -1,8 +1,8 @@
-package com.ktb.eatbookappbackend.domain.novel.service;
+package com.ktb.eatbookappbackend.domain.episode.service;
 
 import com.ktb.eatbookappbackend.domain.fileMetaData.repository.FileMetaDataRepository;
 import com.ktb.eatbookappbackend.domain.novel.exception.NovelFileException;
-import com.ktb.eatbookappbackend.domain.novel.message.NovelFileErrorCode;
+import com.ktb.eatbookappbackend.domain.episode.message.EpisodeFileErrorCode;
 import com.ktb.eatbookappbackend.entity.FileMetadata;
 import com.ktb.eatbookappbackend.entity.constant.FileType;
 import lombok.RequiredArgsConstructor;
@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
 @Service
-public class NovelFileService {
+public class EpisodeFileService {
 
     private final FileService fileService;
     private final FileMetaDataRepository fileMetaDataRepository;
@@ -25,7 +25,7 @@ public class NovelFileService {
      */
     public String generatePresignedGetUrl(String episodeId, FileType fileType) {
         FileMetadata fileMetadata = fileMetaDataRepository.findFileIdByEpisodeIdAndType(episodeId, fileType)
-            .orElseThrow(() -> new NovelFileException(NovelFileErrorCode.FILE_NOT_FOUND));
+            .orElseThrow(() -> new NovelFileException(EpisodeFileErrorCode.FILE_NOT_FOUND));
         return fileService.generatePresignedGetUrl(fileMetadata);
     }
 }

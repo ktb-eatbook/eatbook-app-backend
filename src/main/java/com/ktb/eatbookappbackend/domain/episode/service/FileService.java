@@ -1,9 +1,9 @@
-package com.ktb.eatbookappbackend.domain.novel.service;
+package com.ktb.eatbookappbackend.domain.episode.service;
 
 import com.ktb.eatbookappbackend.entity.constant.FileType;
 import software.amazon.awssdk.services.s3.model.GetObjectRequest;
 import com.ktb.eatbookappbackend.domain.novel.exception.NovelFileException;
-import com.ktb.eatbookappbackend.domain.novel.message.NovelFileErrorCode;
+import com.ktb.eatbookappbackend.domain.episode.message.EpisodeFileErrorCode;
 import com.ktb.eatbookappbackend.entity.FileMetadata;
 import java.time.Duration;
 import lombok.RequiredArgsConstructor;
@@ -63,7 +63,7 @@ public class FileService {
             return presignedRequest.url().toString();
         } catch (Exception e) {
             log.error("Presigned GET Url 생성 중 오류가 발생했습니다. fileId: {}", fileMetadata.getId());
-            throw new NovelFileException(NovelFileErrorCode.PRESIGNED_URL_GENERATION_FAILED);
+            throw new NovelFileException(EpisodeFileErrorCode.PRESIGNED_URL_GENERATION_FAILED);
         }
     }
 }

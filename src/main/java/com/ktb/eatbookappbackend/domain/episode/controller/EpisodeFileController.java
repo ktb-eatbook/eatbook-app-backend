@@ -1,8 +1,8 @@
-package com.ktb.eatbookappbackend.domain.novel.controller;
+package com.ktb.eatbookappbackend.domain.episode.controller;
 
+import com.ktb.eatbookappbackend.domain.episode.service.EpisodeFileService;
 import com.ktb.eatbookappbackend.domain.novel.dto.NovelFileDTO;
-import com.ktb.eatbookappbackend.domain.novel.message.NovelFileSuccessCode;
-import com.ktb.eatbookappbackend.domain.novel.service.NovelFileService;
+import com.ktb.eatbookappbackend.domain.episode.message.EpisodeFileSuccessCode;
 import com.ktb.eatbookappbackend.entity.constant.FileType;
 import com.ktb.eatbookappbackend.global.reponse.SuccessResponse;
 import com.ktb.eatbookappbackend.global.reponse.SuccessResponseDTO;
@@ -18,9 +18,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/episodes")
-public class NovelFileController {
+public class EpisodeFileController {
 
-    private final NovelFileService novelFileService;
+    private final EpisodeFileService episodeFileService;
 
     @GetMapping("/{episodeId}/{fileType}/presigned-url")
     public ResponseEntity<SuccessResponseDTO> getPresignedUrl(
@@ -28,7 +28,7 @@ public class NovelFileController {
         @PathVariable("fileType") String fileType
     ) {
         FileType enumFileType = FileType.valueOf(fileType.toUpperCase());
-        String presignedUrl = novelFileService.generatePresignedGetUrl(episodeId, enumFileType);
-        return SuccessResponse.toResponseEntity(NovelFileSuccessCode.PRESIGNED_URL_RETRIEVED, NovelFileDTO.of(presignedUrl));
+        String presignedUrl = episodeFileService.generatePresignedGetUrl(episodeId, enumFileType);
+        return SuccessResponse.toResponseEntity(EpisodeFileSuccessCode.PRESIGNED_URL_RETRIEVED, NovelFileDTO.of(presignedUrl));
     }
 }
