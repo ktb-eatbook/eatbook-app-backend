@@ -6,14 +6,16 @@ import com.ktb.eatbookappbackend.domain.member.repository.MemberRepository;
 import com.ktb.eatbookappbackend.domain.memberSetting.repository.MemberSettingRepository;
 import com.ktb.eatbookappbackend.entity.Member;
 import com.ktb.eatbookappbackend.entity.MemberSetting;
-import com.ktb.eatbookappbackend.entity.constant.AgeGroup;
-import com.ktb.eatbookappbackend.entity.constant.Gender;
 import com.ktb.eatbookappbackend.oauth.dto.MemberDTO;
 import com.ktb.eatbookappbackend.oauth.dto.MemberSettingDTO;
+import com.ktb.eatbookappbackend.oauth.dto.SignupMemberDTO;
+import com.ktb.eatbookappbackend.oauth.dto.SignupRequestDTO;
 import com.ktb.eatbookappbackend.oauth.dto.SignupResponseDTO;
 import com.ktb.eatbookappbackend.oauth.exception.SignupException;
+import com.ktb.eatbookappbackend.oauth.jwt.JwtUtil;
 import com.ktb.eatbookappbackend.oauth.message.AuthErrorCode;
 import java.util.List;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,28 +24,11 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class AuthService {
 
+    private final JwtUtil jwtUtil;
     private final MemberRepository memberRepository;
     private final MemberSettingRepository memberSettingRepository;
     private final BookmarkRepository bookmarkRepository;
     private final FavoriteRepository favoriteRepository;
-
-    /**
-     * 사용자 가입 프로세스를 처리합니다.
-     *
-     * @param email           사용자의 이메일. 반드시 고유하고 null이 아니어야 합니다.
-     * @param nickname        사용자의 닉네임. null이 아니어야 합니다.
-     * @param profileImageUrl 사용자의 프로필 이미지 URL. null일 수 있습니다.
-     * @param gender          사용자의 성별. null이 아니어야 합니다.
-     * @param ageGroup        사용자의 연령대. null이 아니어야 합니다.
-     * @return {@link SignupResponseDTO}로, 가입한 사용자의 정보를 포함합니다.
-     * @throws SignupException 이메일이 이미 등록된 경우 발생합니다.
-     */
-    public SignupResponseDTO signUp(String email, String nickname, String profileImageUrl, Gender gender, AgeGroup ageGroup) {
-        Member newMember = createMember(email, nickname, profileImageUrl, gender, ageGroup);
-        MemberSettingDTO memberSettingDTO = MemberSettingDTO.of(newMember.getMemberSetting());
-        MemberDTO memberDTO = MemberDTO.of(newMember, List.of(), List.of(), memberSettingDTO);
-        return SignupResponseDTO.of(memberDTO);
-    }
 
     /**
      * 로그인 프로세스를 처리합니다.
@@ -59,28 +44,57 @@ public class AuthService {
     }
 
     /**
-     * 시스템에 새로운 멤버를 생성합니다.
+     * 가입 프로세스를 처리합니다.
      *
-     * @param email           멤버의 고유 이메일. null이 아니어야 합니다.
-     * @param nickname        멤버의 닉네임. null이 아니어야 합니다.
-     * @param profileImageUrl 멤버의 프로필 이미지 URL. null일 수 있습니다.
-     * @param gender          멤버의 성별. null이 아니어야 합니다.
-     * @param ageGroup        멤버의 연령대. null이 아니어야 합니다.
+     * @param signupRequestDTO 가입 요청 데이터 전송 객체. 가입에 필요한 정보를 담고 있습니다.
+     * @return {@link SignupResponseDTO} 가입 응답 데이터 전송 객체. 멤버 정보, 북마크한 소설 ID, 좋아요한 소설 ID, 멤버 설정 정보를 포함합니다.
+     * @throws SignupException 시스템에 이미 존재하는 이메일이 가입 요청에 포함된 경우 발생합니다.
+     */
+    public SignupResponseDTO signUp(SignupRequestDTO signupRequestDTO) {
+        SignupMemberDTO signupMemberDTO = validateAndExtractSignupInfo(signupRequestDTO);
+        Member newMember = createMember(signupMemberDTO);
+        MemberSettingDTO memberSettingDTO = MemberSettingDTO.of(newMember.getMemberSetting());
+        MemberDTO memberDTO = MemberDTO.of(newMember, List.of(), List.of(), memberSettingDTO);
+        return SignupResponseDTO.of(memberDTO);
+    }
+
+    /**
+     * 제공된 요청 DTO에서 가입 정보를 유효성 검사하고 추출합니다.
+     *
+     * @param signupRequestDTO 가입 요청 데이터 전송 객체. 필요한 정보를 담고 있습니다.
+     * @return {@link SignupMemberDTO} 객체. 추출된 가입 정보를 포함합니다.
+     * @throws SignupException 가입 토큰이 유효하지 않은 경우 발생합니다.
+     */
+    private SignupMemberDTO validateAndExtractSignupInfo(SignupRequestDTO signupRequestDTO) {
+        String signupToken = signupRequestDTO.token();
+        if (!jwtUtil.validateSignupToken(signupToken)) {
+            throw new SignupException(AuthErrorCode.SIGNUP_TOKEN_INVALID);
+        }
+
+        Map<String, String> claims = jwtUtil.extractSignupClaims(signupToken);
+        return SignupMemberDTO.of(claims, signupRequestDTO.gender(), signupRequestDTO.getAgeGroupEnum());
+    }
+
+    /**
+     * 새로운 멤버를 생성합니다.
+     *
+     * @param signupMemberDTO 멤버 생성에 필요한 정보를 담고 있는 DTO.
      * @return 새로 생성된 멤버.
-     * @throws SignupException 이메일이 이미 시스템에 등록된 경우 발생합니다.
+     * @throws SignupException DTO에 제공된 이메일이 시스템에 이미 존재하는 경우.
      */
     @Transactional
-    public Member createMember(String email, String nickname, String profileImageUrl, Gender gender, AgeGroup ageGroup) {
+    protected Member createMember(SignupMemberDTO signupMemberDTO) {
+        String email = signupMemberDTO.email();
         if (memberRepository.existsByEmailAndDeletedAtIsNull(email)) {
             throw new SignupException(AuthErrorCode.EMAIL_DUPLICATED);
         }
 
         Member member = Member.builder()
             .email(email)
-            .nickname(nickname)
-            .profileImageUrl(profileImageUrl)
-            .gender(gender)
-            .ageGroup(ageGroup)
+            .nickname(signupMemberDTO.nickname())
+            .profileImageUrl(signupMemberDTO.profileImageUrl())
+            .gender(signupMemberDTO.gender())
+            .ageGroup(signupMemberDTO.ageGroup())
             .build();
 
         memberRepository.save(member);

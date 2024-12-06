@@ -19,11 +19,9 @@ import com.ktb.eatbookappbackend.oauth.dto.SignupResponseDTO;
 import com.ktb.eatbookappbackend.oauth.exception.SignupException;
 import com.ktb.eatbookappbackend.oauth.jwt.JwtUtil;
 import com.ktb.eatbookappbackend.oauth.jwt.TokenService;
-import com.ktb.eatbookappbackend.oauth.message.AuthErrorCode;
 import com.ktb.eatbookappbackend.oauth.message.AuthSuccessCode;
 import com.ktb.eatbookappbackend.oauth.service.AuthService;
 import jakarta.servlet.http.HttpServletRequest;
-import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -89,20 +87,7 @@ public class AuthController {
      */
     @PostMapping("/signup")
     public ResponseEntity<SuccessResponseDTO> getSignupInfo(@RequestBody SignupRequestDTO request) {
-        String signupToken = request.token();
-
-        if (!jwtUtil.validateSignupToken(signupToken)) {
-            throw new SignupException(AuthErrorCode.SIGNUP_TOKEN_INVALID);
-        }
-
-        Map<String, String> signupInfo = jwtUtil.extractSignupClaims(signupToken);
-        SignupResponseDTO signupResponseDTO = authService.signUp(
-            signupInfo.get("email"),
-            signupInfo.get("nickname"),
-            signupInfo.get("profileImage"),
-            request.gender(),
-            request.getAgeGroupEnum()
-        );
+        SignupResponseDTO signupResponseDTO = authService.signUp(request);
 
         String newMemberId = signupResponseDTO.member().id();
         String accessToken = jwtUtil.generateAccessToken(newMemberId, Role.MEMBER);
