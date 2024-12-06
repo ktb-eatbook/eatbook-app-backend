@@ -16,14 +16,12 @@ public class NovelFileService {
     private final FileMetaDataRepository fileMetaDataRepository;
 
     /**
-     * 지정된 에피소드와 파일 유형에 해당하는 소설 파일을 검색하여
-     * pre-signed URL을 생성합니다.
+     * 지정된 에피소드와 파일 유형에 해당하는 소설 파일을 검색하여 pre-signed URL을 생성합니다.
      *
      * @param episodeId 에피소드 ID
-     * @param fileType 파일 유형 (예: EPUB, PDF)
+     * @param fileType  파일 유형
      * @return 생성된 pre-signed URL
-     * @throws NovelFileException 지정된 에피소드 ID와 파일 유형에 해당하는
-     *                           소설 파일이 없는 경우
+     * @throws NovelFileException 지정된 에피소드 ID와 파일 유형에 해당하는 소설 파일이 없는 경우
      */
     public String generatePresignedGetUrl(String episodeId, FileType fileType) {
         FileMetadata fileMetadata = fileMetaDataRepository.findFileIdByEpisodeIdAndType(episodeId, fileType)
