@@ -13,6 +13,6 @@ public interface FileMetaDataRepository extends JpaRepository<FileMetadata, Stri
         "FROM FileMetadata f WHERE f.episode.id = :episodeId AND f.type = :type")
     boolean existsByEpisodeIdAndType(@Param("episodeId") String episodeId, @Param("type") FileType type);
 
-    @Query("SELECT f.id FROM FileMetadata f WHERE f.episode.id = :episodeId AND f.type = :type")
-    Optional<String> findFileIdByEpisodeIdAndType(@Param("episodeId") String episodeId, @Param("type") FileType type);
+    @Query("SELECT f FROM FileMetadata f WHERE f.episode.id = :episodeId AND f.type = :type")
+    Optional<FileMetadata> findFileIdByEpisodeIdAndType(@Param("episodeId") String episodeId, @Param("type") FileType type);
 }
