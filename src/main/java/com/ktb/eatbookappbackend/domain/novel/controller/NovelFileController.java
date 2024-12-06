@@ -17,19 +17,18 @@ import org.springframework.web.bind.annotation.RestController;
 @Validated
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/novels")
+@RequestMapping("/api/episodes")
 public class NovelFileController {
 
     private final NovelFileService novelFileService;
 
-    @GetMapping("/{novelId}/episodes/{episodeId}/{fileType}/presigned-url")
+    @GetMapping("/{episodeId}/{fileType}/presigned-url")
     public ResponseEntity<SuccessResponseDTO> getPresignedUrl(
-        @PathVariable("novelId") String novelId,
         @PathVariable("episodeId") String episodeId,
         @PathVariable("fileType") String fileType
     ) {
         FileType enumFileType = FileType.valueOf(fileType.toUpperCase());
-        String presignedUrl = novelFileService.generatePresignedGetUrl(novelId, episodeId, enumFileType);
+        String presignedUrl = novelFileService.generatePresignedGetUrl(episodeId, enumFileType);
         return SuccessResponse.toResponseEntity(NovelFileSuccessCode.PRESIGNED_URL_RETRIEVED, NovelFileDTO.of(presignedUrl));
     }
 }
