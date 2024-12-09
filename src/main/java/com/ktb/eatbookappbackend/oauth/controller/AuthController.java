@@ -29,6 +29,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -137,5 +138,18 @@ public class AuthController {
         String refreshToken = request.getHeader(REFRESH_TOKEN.getValue());
         tokenService.deleteRefreshToken(refreshToken);
         return SuccessResponse.toResponseEntity(AuthSuccessCode.DELETE_MEMBER_COMPLETED);
+    }
+
+    /**
+     * 토큰 유효성 확인 API
+     * <p>
+     * 이 API는 JWT 필터를 통해 토큰이 유효한 경우 OK 상태를 반환합니다.
+     *
+     * @return {@link ResponseEntity}로, 성공적으로 토큰이 유효한 경우 OK 상태와 메시지를 반환합니다.
+     */
+    @Secured(Role.MEMBER_VALUE)
+    @GetMapping("/validate-token")
+    public ResponseEntity<SuccessResponseDTO> validateToken() {
+        return SuccessResponse.toResponseEntity(AuthSuccessCode.TOKEN_VALID);
     }
 }
