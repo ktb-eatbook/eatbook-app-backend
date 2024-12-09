@@ -1,18 +1,23 @@
 package com.ktb.eatbookappbackend.entity;
 
-import com.ktb.eatbookappbackend.entity.base.BaseEntity;
-import jakarta.persistence.*;
+import com.ktb.eatbookappbackend.entity.base.SoftDeletableEntity;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import java.util.Objects;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.antlr.v4.runtime.misc.NotNull;
 
-import java.util.Objects;
-
 @Getter
 @NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
 @Entity
-public class Comment extends BaseEntity {
+public class Comment extends SoftDeletableEntity {
 
     @Id
     @Column(length = 36)
@@ -40,8 +45,12 @@ public class Comment extends BaseEntity {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         Comment comment = (Comment) o;
         return Objects.equals(id, comment.id);
     }
