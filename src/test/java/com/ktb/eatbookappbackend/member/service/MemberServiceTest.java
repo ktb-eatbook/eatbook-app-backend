@@ -84,7 +84,7 @@ public class MemberServiceTest {
             () -> assertEquals(expectedResult.pagination().totalPages(), result.pagination().totalPages())
         );
 
-        List<NovelDTO> bookmarkedNovelss = result.bookmarkedNovels();
+        List<NovelDTO> bookmarkedNovelss = result.novels();
         assertNotNull(bookmarkedNovelss);
         assertEquals(totalItems, bookmarkedNovelss.size());
 
@@ -121,6 +121,6 @@ public class MemberServiceTest {
             () -> assertEquals(expectedResult.pagination().totalItems(), result.pagination().totalItems()),
             () -> assertEquals(expectedResult.pagination().totalPages(), result.pagination().totalPages())
         );
-        assertEquals(Collections.emptyList(), result.bookmarkedNovels());
+        assertEquals(Collections.emptyList(), result.novels());
     }
 }

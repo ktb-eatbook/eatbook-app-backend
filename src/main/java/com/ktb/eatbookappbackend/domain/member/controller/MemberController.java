@@ -42,7 +42,7 @@ public class MemberController {
         @AuthenticationPrincipal String memberId
     ) {
         BookmarkedNovelsPaginationDTO bookmarkedNovels = memberService.getMemberBookmarkedNovels(memberId, page, size);
-        if (bookmarkedNovels.bookmarkedNovels().isEmpty()) {
+        if (bookmarkedNovels.novels().isEmpty()) {
             return ResponseEntity.ok(SuccessResponseDTO.of(GlobalSuccessMessage.NO_RESULTS_FOUND, bookmarkedNovels));
         }
 

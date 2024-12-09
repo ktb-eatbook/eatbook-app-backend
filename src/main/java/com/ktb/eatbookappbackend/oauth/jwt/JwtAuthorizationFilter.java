@@ -37,7 +37,8 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
         "/api/novel/.*",              // /api/novel/{novelId}
         "/api/novel/.*/episodes",     // /api/novel/{novelId}/episodes
         "/api/search/log",
-        "/api/search/novels"
+        "/api/search/novels",
+        "/api/health"
     );
 
     @Override

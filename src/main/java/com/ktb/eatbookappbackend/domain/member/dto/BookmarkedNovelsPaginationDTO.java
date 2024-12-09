@@ -6,7 +6,7 @@ import java.util.List;
 
 public record BookmarkedNovelsPaginationDTO(
     PaginationInfoDTO pagination,
-    List<NovelDTO> bookmarkedNovels
+    List<NovelDTO> novels
 ) {
 
     public static BookmarkedNovelsPaginationDTO of(PaginationInfoDTO pagination, List<NovelDTO> bookmarkedNovels) {
