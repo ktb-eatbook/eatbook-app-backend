@@ -29,10 +29,30 @@ public class MemberService {
     private final BookmarkRepository bookmarkRepository;
     private final FavoriteRepository favoriteRepository;
 
+    /**
+     * 이 메서드는 {@code memberId}로 전달된 멤버를 데이터베이스에서 검색합니다. 멤버가 존재하지 않으면 {@link MemberException}을 발생시킵니다.
+     *
+     * @param memberId 찾을 멤버의 고유 식별자.
+     * @return 찾은 멤버.
+     * @throws MemberException {@code memberId}로 지정된 멤버가 존재하지 않을 경우 발생합니다.
+     */
     @Transactional(readOnly = true)
     public Member findById(String memberId) {
         return memberRepository.findById(memberId)
             .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND));
+    }
+
+    /**
+     * 이 메서드는 {@code memberId}로 전달된 멤버를 데이터베이스에서 검색합니다. 멤버를 Soft-Delete 처리한 다음, 변경 사항을 데이터베이스에 저장합니다.
+     *
+     * @param memberId 삭제할 멤버의 고유 식별자.
+     * @throws MemberException {@code memberId}로 지정된 멤버가 존재하지 않을 경우 발생합니다.
+     */
+    @Transactional
+    public void deleteMember(String memberId) {
+        Member member = findById(memberId);
+        member.delete();
+        memberRepository.save(member);
     }
 
     /**

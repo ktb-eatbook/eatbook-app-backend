@@ -14,8 +14,8 @@ public class ValidationUtil {
      */
     public static void validatePageIndex(int pageIndex, int totalPages) {
         int maxValidPageIndex = totalPages - 1;
-        if (pageIndex > maxValidPageIndex) {
-            throw new GlobalException(GlobalErrorMessage.INVALID_PAGE_INDEX);
+        if (totalPages > 0 && pageIndex > maxValidPageIndex) {
+            throw new GlobalException(GlobalErrorMessage.INVALID_QUERY_PARAMETER);
         }
     }
 }
