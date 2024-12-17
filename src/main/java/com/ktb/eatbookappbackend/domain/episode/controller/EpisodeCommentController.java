@@ -26,12 +26,27 @@ public class EpisodeCommentController {
 
     private final EpisodeCommentService episodeCommentService;
 
+    /**
+     * 특정 에피소드에 대한 댓글을 가져옵니다.
+     *
+     * @param episodeId 에피소드의 고유 식별자.
+     * @return ResponseEntity로, SuccessResponseDTO를 포함하는 응답. 이 응답에는 상태 코드와 에피소드에 대한 댓글 데이터를 포함하는 EpisodeCommentsDTO 객체가 있습니다.
+     */
+    @Secured(Role.MEMBER_VALUE)
     @GetMapping
     public ResponseEntity<SuccessResponseDTO> getComments(@PathVariable("episodeId") String episodeId) {
         EpisodeCommentsDTO episodeCommentsDTO = episodeCommentService.getCommentsByEpisodeId(episodeId);
         return SuccessResponse.toResponseEntity(EpisodeSuccessCode.COMMENTS_RETRIEVED, episodeCommentsDTO);
     }
 
+    /**
+     * 특정 에피소드에 대한 새로운 댓글을 생성합니다.
+     *
+     * @param episodeId 에피소드의 고유 식별자.
+     * @param memberId 댓글을 생성하는 멤버의 고유 식별자.
+     * @param request 댓글 내용을 포함하는 요청 객체.
+     * @return ResponseEntity로, SuccessResponseDTO를 포함하는 응답. 이 응답에는 성공 상태 코드와 생성된 댓글 데이터를 CommentDTO 객체로 포함합니다.
+     */
     @Secured(Role.MEMBER_VALUE)
     @PostMapping
     public ResponseEntity<SuccessResponseDTO> createComment(
@@ -43,6 +58,13 @@ public class EpisodeCommentController {
         return SuccessResponse.toResponseEntity(EpisodeSuccessCode.COMMENT_CREATED, comment);
     }
 
+    /**
+     * 특정 에피소드에 대한 댓글을 삭제합니다.
+     *
+     * @param episodeId 에피소드의 고유 식별자.
+     * @param commentId 삭제할 댓글의 고유 식별자.
+     * @return ResponseEntity로, SuccessResponseDTO를 포함하는 응답. 이 응답에는 성공 여부를 나타내는 상태 코드가 포함됩니다.
+     */
     @Secured(Role.MEMBER_VALUE)
     @DeleteMapping("/{commentId}")
     public ResponseEntity<SuccessResponseDTO> deleteComment(
