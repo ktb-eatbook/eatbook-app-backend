@@ -53,9 +53,10 @@ public class NovelService {
      * @return {@link NovelDTO} 객체로, 소설의 정보와 좋아요 수를 포함합니다. 지정된 novelId로 소설을 찾을 수 없으면 {@link NovelException}이 발생하고
      * {@link NovelErrorCode#NOVEL_NOT_FOUND}가 전달됩니다.
      */
-    @Transactional(readOnly = true)
+    @Transactional
     public NovelDTO getNovel(String novelId) {
         Novel novel = findById(novelId);
+        novel.increaseViewCount();
         int favoriteCount = favoriteRepository.countByNovelId(novelId);
         return NovelDTO.of(novel, favoriteCount);
     }
