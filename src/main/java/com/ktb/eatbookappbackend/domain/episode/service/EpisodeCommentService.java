@@ -50,8 +50,8 @@ public class EpisodeCommentService {
      * 특정 에피소드에 대한 새로운 댓글을 생성합니다.
      *
      * @param episodeId 에피소드의 고유 식별자.
-     * @param memberId 댓글을 작성하는 멤버의 고유 식별자.
-     * @param request 댓글 내용을 포함하는 요청 객체.
+     * @param memberId  댓글을 작성하는 멤버의 고유 식별자.
+     * @param request   댓글 내용을 포함하는 요청 객체.
      * @return CommentDTO, 새로 생성된 댓글을 나타내는 DTO.
      * @throws EpisodeException 지정된 에피소드가 존재하지 않는 경우.
      */
@@ -80,9 +80,14 @@ public class EpisodeCommentService {
      * @throws EpisodeException 지정된 댓글이 존재하지 않는 경우.
      */
     @Transactional
-    public void deleteComment(String commentId) {
+    public void deleteComment(String commentId, String memberId) {
         Comment comment = commentRepository.findByIdAndDeletedAtIsNull(commentId)
             .orElseThrow(() -> new EpisodeException(EpisodeErrorCode.COMMENT_NOT_FOUND));
-        commentRepository.delete(comment);
+
+        if (!comment.getMember().getId().equals(memberId)) {
+            throw new EpisodeException(EpisodeErrorCode.COMMENT_DELETE_PERMISSION_DENIED);
+        }
+
+        comment.delete();
     }
 }

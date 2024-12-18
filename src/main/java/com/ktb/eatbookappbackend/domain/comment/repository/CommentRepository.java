@@ -12,5 +12,6 @@ public interface CommentRepository extends JpaRepository<Comment, String>, Comme
     @Query("SELECT c FROM Comment c WHERE c.episode.id = :episodeId AND c.deletedAt IS NULL ORDER BY c.createdAt DESC")
     List<Comment> findCommentsByEpisodeId(@Param("episodeId") String episodeId);
 
-    Optional<Comment> findByIdAndDeletedAtIsNull(String id);
+    @Query("SELECT c FROM Comment c JOIN FETCH c.member WHERE c.id = :commentId AND c.deletedAt IS NULL")
+    Optional<Comment> findByIdAndDeletedAtIsNull(@Param("commentId") String commentId);
 }

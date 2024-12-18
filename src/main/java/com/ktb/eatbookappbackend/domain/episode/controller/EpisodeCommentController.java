@@ -69,9 +69,10 @@ public class EpisodeCommentController {
     @DeleteMapping("/{episodeId}/comments/{commentId}")
     public ResponseEntity<SuccessResponseDTO> deleteComment(
         @PathVariable("episodeId") String episodeId,
-        @PathVariable("commentId") String commentId
+        @PathVariable("commentId") String commentId,
+        @AuthenticationPrincipal String memberId
     ) {
-        episodeCommentService.deleteComment(commentId);
+        episodeCommentService.deleteComment(commentId, memberId);
         return SuccessResponse.toResponseEntity(EpisodeSuccessCode.COMMENT_DELETED);
     }
 }
