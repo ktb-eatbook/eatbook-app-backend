@@ -84,4 +84,21 @@ public class EpisodeCommentService {
 
         comment.delete();
     }
+
+    /**
+     * 댓글의 신고 횟수를 증가시킵니다.
+     *
+     * @param commentId
+     */
+    @Transactional
+    public void reportComment(String commentId) {
+        commentRepository.incrementReportCount(commentId);
+
+        Comment comment = commentRepository.findByIdAndDeletedAtIsNull(commentId)
+            .orElseThrow(() -> new EpisodeException(EpisodeErrorCode.COMMENT_NOT_FOUND));
+
+        if (comment.getReportCount() >= 5) {
+            comment.delete();
+        }
+    }
 }
