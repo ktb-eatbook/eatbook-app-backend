@@ -2,7 +2,7 @@ package com.ktb.eatbookappbackend.domain.episode.service;
 
 import com.ktb.eatbookappbackend.domain.comment.repository.CommentRepository;
 import com.ktb.eatbookappbackend.domain.episode.controller.EpisodeCommentRequestDTO;
-import com.ktb.eatbookappbackend.domain.episode.dto.CommentDetailDTO;
+import com.ktb.eatbookappbackend.domain.episode.dto.CommentDTO;
 import com.ktb.eatbookappbackend.domain.episode.dto.EpisodeCommentsDTO;
 import com.ktb.eatbookappbackend.domain.episode.exception.EpisodeException;
 import com.ktb.eatbookappbackend.domain.episode.message.EpisodeErrorCode;
@@ -33,7 +33,7 @@ public class EpisodeCommentService {
      */
     @Transactional(readOnly = true)
     public EpisodeCommentsDTO getCommentsByEpisodeId(String episodeId) {
-        List<CommentDetailDTO> commentDTOs = commentRepository.findCommentDetailDTOsByEpisodeId(episodeId);
+        List<CommentDTO> commentDTOs = commentRepository.findCommentDTOsByEpisodeId(episodeId);
         return EpisodeCommentsDTO.of(commentDTOs);
     }
 
@@ -47,7 +47,7 @@ public class EpisodeCommentService {
      * @throws EpisodeException 지정된 에피소드가 존재하지 않는 경우.
      */
     @Transactional
-    public CommentDetailDTO createComment(String episodeId, String memberId, EpisodeCommentRequestDTO request) {
+    public CommentDTO createComment(String episodeId, String memberId, EpisodeCommentRequestDTO request) {
         Episode episode = episodeRepository.findById(episodeId).orElseThrow(() -> new EpisodeException(EpisodeErrorCode.EPISODE_NOT_FOUND));
         Member member = memberService.findById(memberId);
         Comment comment = Comment.builder()
@@ -57,7 +57,7 @@ public class EpisodeCommentService {
             .build();
         commentRepository.save(comment);
 
-        return CommentDetailDTO.of(
+        return CommentDTO.of(
             comment.getId(),
             comment.getContent(),
             member.getId(),

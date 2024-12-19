@@ -13,7 +13,7 @@ import static org.mockito.Mockito.when;
 import com.ktb.eatbookappbackend.comment.fixture.CommentFixture;
 import com.ktb.eatbookappbackend.domain.comment.repository.CommentRepository;
 import com.ktb.eatbookappbackend.domain.episode.controller.EpisodeCommentRequestDTO;
-import com.ktb.eatbookappbackend.domain.episode.dto.CommentDetailDTO;
+import com.ktb.eatbookappbackend.domain.episode.dto.CommentDTO;
 import com.ktb.eatbookappbackend.domain.episode.dto.EpisodeCommentsDTO;
 import com.ktb.eatbookappbackend.domain.episode.exception.EpisodeException;
 import com.ktb.eatbookappbackend.domain.episode.message.EpisodeErrorCode;
@@ -62,8 +62,8 @@ public class EpisodeCommentServiceTest {
     public void should_ReturnComments_When_EpisodeHasComments() {
         // Given
         Comment comment = CommentFixture.createComment(episode, member);
-        when(commentRepository.findCommentDetailDTOsByEpisodeId(episode.getId()))
-            .thenReturn(List.of(CommentDetailDTO.of(
+        when(commentRepository.findCommentDTOsByEpisodeId(episode.getId()))
+            .thenReturn(List.of(CommentDTO.of(
                 comment.getId(), comment.getContent(), member.getId(), member.getNickname(), member.getProfileImageUrl(),
                 comment.getCreatedAt()
             )));
@@ -74,7 +74,7 @@ public class EpisodeCommentServiceTest {
         // Then
         assertEquals(1, result.comments().size());
         assertEquals(comment.getContent(), result.comments().get(0).content());
-        verify(commentRepository, times(1)).findCommentDetailDTOsByEpisodeId(episode.getId());
+        verify(commentRepository, times(1)).findCommentDTOsByEpisodeId(episode.getId());
     }
 
     @Test
@@ -87,7 +87,7 @@ public class EpisodeCommentServiceTest {
         when(commentRepository.save(any(Comment.class))).thenReturn(comment);
 
         // When
-        CommentDetailDTO result = episodeCommentService.createComment(episode.getId(), member.getId(), request);
+        CommentDTO result = episodeCommentService.createComment(episode.getId(), member.getId(), request);
 
         // Then
         assertEquals(request.content(), result.content());

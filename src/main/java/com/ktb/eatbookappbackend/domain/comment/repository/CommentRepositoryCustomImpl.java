@@ -4,7 +4,7 @@ import static com.ktb.eatbookappbackend.entity.QComment.comment;
 import static com.ktb.eatbookappbackend.entity.QEpisode.episode;
 import static com.ktb.eatbookappbackend.entity.QMember.member;
 
-import com.ktb.eatbookappbackend.domain.episode.dto.CommentDetailDTO;
+import com.ktb.eatbookappbackend.domain.episode.dto.CommentDTO;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
@@ -32,9 +32,9 @@ public class CommentRepositoryCustomImpl implements CommentRepositoryCustom {
     }
 
     @Override
-    public List<CommentDetailDTO> findCommentDetailDTOsByEpisodeId(String episodeId) {
+    public List<CommentDTO> findCommentDTOsByEpisodeId(String episodeId) {
         return queryFactory
-            .select(Projections.constructor(CommentDetailDTO.class,
+            .select(Projections.constructor(CommentDTO.class,
                 comment.id,
                 comment.content,
                 member.id,
