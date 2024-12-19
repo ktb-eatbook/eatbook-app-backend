@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/episodes")
+@RequestMapping("/api")
 @RequiredArgsConstructor
 public class EpisodeCommentController {
 
@@ -33,7 +33,7 @@ public class EpisodeCommentController {
      * @return ResponseEntity로, SuccessResponseDTO를 포함하는 응답. 이 응답에는 상태 코드와 에피소드에 대한 댓글 데이터를 포함하는 EpisodeCommentsDTO 객체가 있습니다.
      */
     @Secured(Role.MEMBER_VALUE)
-    @GetMapping("/{episodeId}/comments")
+    @GetMapping("/episodes/{episodeId}/comments")
     public ResponseEntity<SuccessResponseDTO> getComments(@PathVariable("episodeId") String episodeId) {
         EpisodeCommentsDTO episodeCommentsDTO = episodeCommentService.getCommentsByEpisodeId(episodeId);
         return SuccessResponse.toResponseEntity(EpisodeSuccessCode.COMMENTS_RETRIEVED, episodeCommentsDTO);
@@ -48,7 +48,7 @@ public class EpisodeCommentController {
      * @return ResponseEntity로, SuccessResponseDTO를 포함하는 응답. 이 응답에는 성공 상태 코드와 생성된 댓글 데이터를 CommentDTO 객체로 포함합니다.
      */
     @Secured(Role.MEMBER_VALUE)
-    @PostMapping("/{episodeId}/comments")
+    @PostMapping("/episodes/{episodeId}/comments")
     public ResponseEntity<SuccessResponseDTO> createComment(
         @PathVariable("episodeId") String episodeId,
         @AuthenticationPrincipal String memberId,
@@ -59,16 +59,14 @@ public class EpisodeCommentController {
     }
 
     /**
-     * 특정 에피소드에 대한 댓글을 삭제합니다.
+     * 특정 댓글을 삭제합니다.
      *
-     * @param episodeId 에피소드의 고유 식별자.
      * @param commentId 삭제할 댓글의 고유 식별자.
      * @return ResponseEntity로, SuccessResponseDTO를 포함하는 응답. 이 응답에는 성공 여부를 나타내는 상태 코드가 포함됩니다.
      */
     @Secured(Role.MEMBER_VALUE)
-    @DeleteMapping("/{episodeId}/comments/{commentId}")
+    @DeleteMapping("/comments/{commentId}")
     public ResponseEntity<SuccessResponseDTO> deleteComment(
-        @PathVariable("episodeId") String episodeId,
         @PathVariable("commentId") String commentId,
         @AuthenticationPrincipal String memberId
     ) {
