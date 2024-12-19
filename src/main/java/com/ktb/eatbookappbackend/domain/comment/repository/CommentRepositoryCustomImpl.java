@@ -37,6 +37,7 @@ public class CommentRepositoryCustomImpl implements CommentRepositoryCustom {
             .select(Projections.constructor(CommentDetailDTO.class,
                 comment.id,
                 comment.content,
+                member.id,
                 member.nickname,
                 member.profileImageUrl,
                 comment.createdAt

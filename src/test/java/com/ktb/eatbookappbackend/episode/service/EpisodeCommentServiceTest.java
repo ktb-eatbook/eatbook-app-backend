@@ -65,7 +65,8 @@ public class EpisodeCommentServiceTest {
         Comment comment = CommentFixture.createComment(episode, member);
         when(commentRepository.findCommentDetailDTOsByEpisodeId(episode.getId()))
             .thenReturn(List.of(CommentDetailDTO.of(
-                comment.getId(), comment.getContent(), member.getNickname(), member.getProfileImageUrl(), comment.getCreatedAt()
+                comment.getId(), comment.getContent(), member.getId(), member.getNickname(), member.getProfileImageUrl(),
+                comment.getCreatedAt()
             )));
 
         // When
