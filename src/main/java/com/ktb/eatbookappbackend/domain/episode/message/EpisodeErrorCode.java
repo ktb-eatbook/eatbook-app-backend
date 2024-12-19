@@ -12,7 +12,7 @@ public enum EpisodeErrorCode implements MessageCode {
 
     EPISODE_NOT_FOUND("에피소드를 찾을 수 없습니다.", HttpStatus.NOT_FOUND),
     COMMENT_NOT_FOUND("삭제할 댓글을 찾지 못했습니다.", HttpStatus.NOT_FOUND),
-    COMMENT_DELETE_PERMISSION_DENIED("해당 유저는 댓글을 삭제할 수 없습니다.", HttpStatus.BAD_REQUEST);
+    COMMENT_DELETE_PERMISSION_DENIED("해당 댓글을 삭제할 권한이 없습니다.", HttpStatus.UNAUTHORIZED);
 
     private final String message;
     private final HttpStatus status;
