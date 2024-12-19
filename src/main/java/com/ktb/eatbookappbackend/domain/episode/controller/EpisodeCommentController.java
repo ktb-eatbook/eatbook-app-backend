@@ -13,6 +13,7 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -72,5 +73,20 @@ public class EpisodeCommentController {
     ) {
         episodeCommentService.deleteComment(commentId, memberId);
         return SuccessResponse.toResponseEntity(EpisodeSuccessCode.COMMENT_DELETED);
+    }
+
+    /**
+     * 댓글을 신고합니다.
+     *
+     * @param commentId 신고할 댓글의 ID
+     * @return 신고 처리된 댓글에 대한 응답
+     */
+    @Secured(Role.MEMBER_VALUE)
+    @PatchMapping("/comments/{commentId}")
+    public ResponseEntity<SuccessResponseDTO> reportComment(
+        @PathVariable("commentId") String commentId
+    ) {
+        episodeCommentService.reportComment(commentId);
+        return SuccessResponse.toResponseEntity(EpisodeSuccessCode.COMMENT_REPORTED);
     }
 }
