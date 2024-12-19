@@ -148,4 +148,18 @@ public class EpisodeCommentServiceTest {
         assertEquals(EpisodeErrorCode.COMMENT_NOT_FOUND, exception.getErrorCode());
         verify(commentRepository, never()).delete(any(Comment.class));
     }
+
+    @Test
+    public void should_ThrowException_When_UserDoesNotOwnComment() {
+        // Given
+        Member anotherMember = MemberFixture.createMember();
+        Comment comment = CommentFixture.createComment(episode, member);
+        when(commentRepository.findByIdAndDeletedAtIsNull(comment.getId())).thenReturn(Optional.of(comment));
+
+        // When & Then
+        EpisodeException exception = assertThrows(EpisodeException.class,
+            () -> episodeCommentService.deleteComment(comment.getId(), anotherMember.getId()));
+
+        assertEquals(EpisodeErrorCode.COMMENT_DELETE_PERMISSION_DENIED, exception.getErrorCode());
+    }
 }
