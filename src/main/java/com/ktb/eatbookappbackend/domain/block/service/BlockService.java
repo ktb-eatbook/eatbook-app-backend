@@ -23,6 +23,10 @@ public class BlockService {
 
     @Transactional
     public void blockMember(String blockerId, String blockedId) {
+        if (blockedId.equals(blockerId)) {
+            throw new BlockException(BlockErrorCode.SELF_BLOCKED);
+        }
+
         Member blocker = memberRepository.findById(blockerId)
             .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND));
         Member blocked = memberRepository.findById(blockedId)
