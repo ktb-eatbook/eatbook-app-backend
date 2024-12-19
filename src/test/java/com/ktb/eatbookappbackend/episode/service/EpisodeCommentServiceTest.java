@@ -13,7 +13,6 @@ import static org.mockito.Mockito.when;
 import com.ktb.eatbookappbackend.comment.fixture.CommentFixture;
 import com.ktb.eatbookappbackend.domain.comment.repository.CommentRepository;
 import com.ktb.eatbookappbackend.domain.episode.controller.EpisodeCommentRequestDTO;
-import com.ktb.eatbookappbackend.domain.episode.dto.CommentDTO;
 import com.ktb.eatbookappbackend.domain.episode.dto.CommentDetailDTO;
 import com.ktb.eatbookappbackend.domain.episode.dto.EpisodeCommentsDTO;
 import com.ktb.eatbookappbackend.domain.episode.exception.EpisodeException;
@@ -88,7 +87,7 @@ public class EpisodeCommentServiceTest {
         when(commentRepository.save(any(Comment.class))).thenReturn(comment);
 
         // When
-        CommentDTO result = episodeCommentService.createComment(episode.getId(), member.getId(), request);
+        CommentDetailDTO result = episodeCommentService.createComment(episode.getId(), member.getId(), request);
 
         // Then
         assertEquals(request.content(), result.content());

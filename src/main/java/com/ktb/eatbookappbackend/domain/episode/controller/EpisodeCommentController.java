@@ -1,6 +1,6 @@
 package com.ktb.eatbookappbackend.domain.episode.controller;
 
-import com.ktb.eatbookappbackend.domain.episode.dto.CommentDTO;
+import com.ktb.eatbookappbackend.domain.episode.dto.CommentDetailDTO;
 import com.ktb.eatbookappbackend.domain.episode.dto.EpisodeCommentsDTO;
 import com.ktb.eatbookappbackend.domain.episode.message.EpisodeSuccessCode;
 import com.ktb.eatbookappbackend.domain.episode.service.EpisodeCommentService;
@@ -54,7 +54,7 @@ public class EpisodeCommentController {
         @AuthenticationPrincipal String memberId,
         @RequestBody EpisodeCommentRequestDTO request
     ) {
-        CommentDTO comment = episodeCommentService.createComment(episodeId, memberId, request);
+        CommentDetailDTO comment = episodeCommentService.createComment(episodeId, memberId, request);
         return SuccessResponse.toResponseEntity(EpisodeSuccessCode.COMMENT_CREATED, comment);
     }
 
