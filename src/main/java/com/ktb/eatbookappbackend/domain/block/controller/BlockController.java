@@ -1,5 +1,6 @@
 package com.ktb.eatbookappbackend.domain.block.controller;
 
+import com.ktb.eatbookappbackend.domain.block.dto.BlockedMemberIdsDTO;
 import com.ktb.eatbookappbackend.domain.block.message.BlockSuccessCode;
 import com.ktb.eatbookappbackend.domain.block.service.BlockService;
 import com.ktb.eatbookappbackend.entity.constant.Role;
@@ -9,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -29,5 +31,12 @@ public class BlockController {
     ) {
         blockService.blockMember(memberId, id);
         return SuccessResponse.toResponseEntity(BlockSuccessCode.BLOCK_SUCCESS, null);
+    }
+
+    @Secured(Role.MEMBER_VALUE)
+    @GetMapping("/blocked-member-ids")
+    public ResponseEntity<SuccessResponseDTO> getBlockedUsers(@AuthenticationPrincipal String memberId) {
+        BlockedMemberIdsDTO blockedMemberIds = blockService.getBlockedUserIds(memberId);
+        return SuccessResponse.toResponseEntity(BlockSuccessCode.BLOCKED_MEMBER_IDS_RETRIEVED, blockedMemberIds);
     }
 }
