@@ -2,8 +2,12 @@ package com.ktb.eatbookappbackend.domain.comment.repository;
 
 import static com.ktb.eatbookappbackend.entity.QComment.comment;
 import static com.ktb.eatbookappbackend.entity.QEpisode.episode;
+import static com.ktb.eatbookappbackend.entity.QMember.member;
 
+import com.ktb.eatbookappbackend.domain.episode.dto.CommentDetailDTO;
+import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import java.util.List;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -25,5 +29,25 @@ public class CommentRepositoryCustomImpl implements CommentRepositoryCustom {
             .fetchOne();
 
         return count != null ? count.intValue() : 0;
+    }
+
+    @Override
+    public List<CommentDetailDTO> findCommentDetailDTOsByEpisodeId(String episodeId) {
+        return queryFactory
+            .select(Projections.constructor(CommentDetailDTO.class,
+                comment.id,
+                comment.content,
+                member.nickname,
+                member.profileImageUrl,
+                comment.createdAt
+            ))
+            .from(comment)
+            .join(comment.member, member)
+            .where(
+                comment.episode.id.eq(episodeId),
+                comment.deletedAt.isNull()
+            )
+            .orderBy(comment.createdAt.desc())
+            .fetch();
     }
 }

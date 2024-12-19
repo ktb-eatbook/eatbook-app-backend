@@ -1,8 +1,9 @@
-package com.ktb.eatbookappbackend.domain.episode.service;
+package com.ktb.eatbookappbackend.episode.service;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
@@ -13,10 +14,12 @@ import com.ktb.eatbookappbackend.comment.fixture.CommentFixture;
 import com.ktb.eatbookappbackend.domain.comment.repository.CommentRepository;
 import com.ktb.eatbookappbackend.domain.episode.controller.EpisodeCommentRequestDTO;
 import com.ktb.eatbookappbackend.domain.episode.dto.CommentDTO;
+import com.ktb.eatbookappbackend.domain.episode.dto.CommentDetailDTO;
 import com.ktb.eatbookappbackend.domain.episode.dto.EpisodeCommentsDTO;
 import com.ktb.eatbookappbackend.domain.episode.exception.EpisodeException;
 import com.ktb.eatbookappbackend.domain.episode.message.EpisodeErrorCode;
 import com.ktb.eatbookappbackend.domain.episode.repository.EpisodeRepository;
+import com.ktb.eatbookappbackend.domain.episode.service.EpisodeCommentService;
 import com.ktb.eatbookappbackend.domain.member.service.MemberService;
 import com.ktb.eatbookappbackend.entity.Comment;
 import com.ktb.eatbookappbackend.entity.Episode;
@@ -60,7 +63,10 @@ public class EpisodeCommentServiceTest {
     public void should_ReturnComments_When_EpisodeHasComments() {
         // Given
         Comment comment = CommentFixture.createComment(episode, member);
-        when(commentRepository.findCommentsByEpisodeId(episode.getId())).thenReturn(List.of(comment));
+        when(commentRepository.findCommentDetailDTOsByEpisodeId(episode.getId()))
+            .thenReturn(List.of(CommentDetailDTO.of(
+                comment.getId(), comment.getContent(), member.getNickname(), member.getProfileImageUrl(), comment.getCreatedAt()
+            )));
 
         // When
         EpisodeCommentsDTO result = episodeCommentService.getCommentsByEpisodeId(episode.getId());
@@ -68,7 +74,7 @@ public class EpisodeCommentServiceTest {
         // Then
         assertEquals(1, result.comments().size());
         assertEquals(comment.getContent(), result.comments().get(0).content());
-        verify(commentRepository, times(1)).findCommentsByEpisodeId(episode.getId());
+        verify(commentRepository, times(1)).findCommentDetailDTOsByEpisodeId(episode.getId());
     }
 
     @Test
@@ -103,16 +109,31 @@ public class EpisodeCommentServiceTest {
     }
 
     @Test
+    public void should_ThrowException_When_CommentAlreadyDeleted() {
+        // Given
+        Comment comment = CommentFixture.createComment(episode, member);
+        comment.delete();
+        when(commentRepository.findByIdAndDeletedAtIsNull(comment.getId())).thenReturn(Optional.empty());
+
+        // When & Then
+        EpisodeException exception = assertThrows(EpisodeException.class,
+            () -> episodeCommentService.deleteComment(comment.getId(), member.getId()));
+
+        assertEquals(EpisodeErrorCode.COMMENT_NOT_FOUND, exception.getErrorCode());
+        verify(commentRepository, never()).delete(any(Comment.class));
+    }
+
+    @Test
     public void should_DeleteComment_When_CommentExists() {
         // Given
         Comment comment = CommentFixture.createComment(episode, member);
         when(commentRepository.findByIdAndDeletedAtIsNull(comment.getId())).thenReturn(Optional.of(comment));
 
         // When
-        assertDoesNotThrow(() -> episodeCommentService.deleteComment(comment.getId()));
+        assertDoesNotThrow(() -> episodeCommentService.deleteComment(comment.getId(), member.getId()));
 
         // Then
-        verify(commentRepository, times(1)).delete(comment);
+        assertTrue(comment.isDeleted());
     }
 
     @Test
@@ -122,7 +143,7 @@ public class EpisodeCommentServiceTest {
 
         // When & Then
         EpisodeException exception = assertThrows(EpisodeException.class,
-            () -> episodeCommentService.deleteComment("invalid-comment-id"));
+            () -> episodeCommentService.deleteComment("invalid-comment-id", member.getId()));
 
         assertEquals(EpisodeErrorCode.COMMENT_NOT_FOUND, exception.getErrorCode());
         verify(commentRepository, never()).delete(any(Comment.class));

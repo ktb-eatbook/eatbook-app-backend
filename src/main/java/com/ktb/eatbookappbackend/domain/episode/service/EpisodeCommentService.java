@@ -3,6 +3,7 @@ package com.ktb.eatbookappbackend.domain.episode.service;
 import com.ktb.eatbookappbackend.domain.comment.repository.CommentRepository;
 import com.ktb.eatbookappbackend.domain.episode.controller.EpisodeCommentRequestDTO;
 import com.ktb.eatbookappbackend.domain.episode.dto.CommentDTO;
+import com.ktb.eatbookappbackend.domain.episode.dto.CommentDetailDTO;
 import com.ktb.eatbookappbackend.domain.episode.dto.EpisodeCommentsDTO;
 import com.ktb.eatbookappbackend.domain.episode.exception.EpisodeException;
 import com.ktb.eatbookappbackend.domain.episode.message.EpisodeErrorCode;
@@ -33,16 +34,7 @@ public class EpisodeCommentService {
      */
     @Transactional(readOnly = true)
     public EpisodeCommentsDTO getCommentsByEpisodeId(String episodeId) {
-        List<Comment> comments = commentRepository.findCommentsByEpisodeId(episodeId);
-
-        List<CommentDTO> commentDTOs = comments.stream()
-            .map(comment -> CommentDTO.of(
-                comment.getId(),
-                comment.getContent(),
-                comment.getCreatedAt()
-            ))
-            .toList();
-
+        List<CommentDetailDTO> commentDTOs = commentRepository.findCommentDetailDTOsByEpisodeId(episodeId);
         return EpisodeCommentsDTO.of(commentDTOs);
     }
 
