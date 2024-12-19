@@ -29,6 +29,10 @@ public class Comment extends SoftDeletableEntity {
     @Column(nullable = false, length = 300)
     private String content;
 
+    @NotNull
+    @Column(nullable = false)
+    private int reportCount;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
