@@ -86,9 +86,10 @@ public class EpisodeCommentService {
     }
 
     /**
-     * 댓글의 신고 횟수를 증가시킵니다.
+     * 댓글의 신고 횟수를 증가시킵니다. 만약 신고 횟수가 5회 이상이라면 해당 댓글을 삭제합니다.
      *
-     * @param commentId
+     * @param commentId 신고할 댓글의 고유 ID
+     * @throws EpisodeException 지정된 댓글이 존재하지 않는 경우
      */
     @Transactional
     public void reportComment(String commentId) {

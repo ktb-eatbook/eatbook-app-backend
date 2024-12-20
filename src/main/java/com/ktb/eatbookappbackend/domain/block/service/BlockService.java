@@ -21,6 +21,14 @@ public class BlockService {
     private final BlockRepository blockRepository;
     private final MemberRepository memberRepository;
 
+    /**
+     * 멤버를 차단합니다.
+     *
+     * @param blockerId 차단을 시작하는 멤버의 ID
+     * @param blockedId 차단되는 멤버의 ID
+     * @throws BlockException  차단자와 차단된 ID가 동일한 경우, 또는 차단이 이미 존재하는 경우에 발생
+     * @throws MemberException 차단자 또는 차단된 멤버가 존재하지 않는 경우에 발생
+     */
     @Transactional
     public void blockMember(String blockerId, String blockedId) {
         if (blockedId.equals(blockerId)) {
@@ -43,8 +51,15 @@ public class BlockService {
         blockRepository.save(block);
     }
 
+    /**
+     * 차단된 멤버 ID 목록을 검색합니다.
+     *
+     * @param memberId 차단된 멤버 ID 목록을 검색할 멤버의 ID
+     * @return 차단된 멤버 ID 목록을 포함하는 {@link BlockedMemberIdsDTO} 객체
+     * @throws MemberException 지정된 멤버 ID가 존재하지 않는 경우
+     */
     @Transactional(readOnly = true)
-    public BlockedMemberIdsDTO getBlockedUserIds(String memberId) {
+    public BlockedMemberIdsDTO getBlockedMemberIds(String memberId) {
         Member member = memberRepository.findById(memberId)
             .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND));
 

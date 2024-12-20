@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -33,6 +34,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.test.util.ReflectionTestUtils;
 
 @ExtendWith(MockitoExtension.class)
 public class EpisodeCommentServiceTest {
@@ -161,5 +163,51 @@ public class EpisodeCommentServiceTest {
             () -> episodeCommentService.deleteComment(comment.getId(), anotherMember.getId()));
 
         assertEquals(EpisodeErrorCode.COMMENT_DELETE_PERMISSION_DENIED, exception.getErrorCode());
+    }
+
+    @Test
+    public void should_ReportComment_When_ValidCommentExists() {
+        // Given
+        Comment comment = CommentFixture.createComment(episode, member);
+        when(commentRepository.findByIdAndDeletedAtIsNull(comment.getId())).thenReturn(Optional.of(comment));
+
+        // When
+        assertDoesNotThrow(() -> episodeCommentService.reportComment(comment.getId()));
+
+        // Then
+        verify(commentRepository, times(1)).incrementReportCount(comment.getId());
+        verify(commentRepository, times(1)).findByIdAndDeletedAtIsNull(comment.getId());
+    }
+
+    @Test
+    public void should_DeleteComment_When_ReportCountExceedsThreshold() {
+        // Given
+        Comment comment = CommentFixture.createComment(episode, member);
+        ReflectionTestUtils.setField(comment, "reportCount", 4);
+        when(commentRepository.findByIdAndDeletedAtIsNull(comment.getId())).thenReturn(Optional.of(comment));
+        doAnswer(invocation -> {
+            ReflectionTestUtils.setField(comment, "reportCount", comment.getReportCount() + 1);
+            return null;
+        }).when(commentRepository).incrementReportCount(comment.getId());
+
+        // When
+        episodeCommentService.reportComment(comment.getId());
+
+        // Then
+        assertTrue(comment.isDeleted());
+        assertEquals(5, comment.getReportCount());
+        verify(commentRepository, times(1)).incrementReportCount(comment.getId());
+    }
+
+    @Test
+    public void should_ThrowException_When_CommentNotFoundOnReport() {
+        // Given
+        when(commentRepository.findByIdAndDeletedAtIsNull(any(String.class))).thenReturn(Optional.empty());
+
+        // When & Then
+        EpisodeException exception = assertThrows(EpisodeException.class,
+            () -> episodeCommentService.reportComment("invalid-comment-id"));
+
+        assertEquals(EpisodeErrorCode.COMMENT_NOT_FOUND, exception.getErrorCode());
     }
 }
