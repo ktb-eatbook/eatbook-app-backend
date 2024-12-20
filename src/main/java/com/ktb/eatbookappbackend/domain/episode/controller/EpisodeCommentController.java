@@ -78,8 +78,8 @@ public class EpisodeCommentController {
     /**
      * 댓글을 신고합니다.
      *
-     * @param commentId 신고할 댓글의 ID
-     * @return 신고 처리된 댓글에 대한 응답
+     * @param commentId 신고할 댓글의 고유 식별자.
+     * @return ResponseEntity로, SuccessResponseDTO를 포함하는 응답. 이 응답에는 성공 상태 코드가 포함되어 댓글이 신고되었음을 나타냅니다.
      */
     @Secured(Role.MEMBER_VALUE)
     @PatchMapping("/comments/{commentId}")
