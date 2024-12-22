@@ -10,6 +10,7 @@ import com.ktb.eatbookappbackend.domain.novel.dto.NovelDTO;
 import com.ktb.eatbookappbackend.domain.novel.exception.NovelException;
 import com.ktb.eatbookappbackend.domain.novel.message.NovelErrorCode;
 import com.ktb.eatbookappbackend.domain.novel.repository.NovelRepository;
+import com.ktb.eatbookappbackend.domain.redis.service.RedisService;
 import com.ktb.eatbookappbackend.entity.Bookmark;
 import com.ktb.eatbookappbackend.entity.Episode;
 import com.ktb.eatbookappbackend.entity.Favorite;
@@ -33,6 +34,7 @@ public class NovelService {
     private final CommentRepository commentRepository;
     private final MemberService memberService;
     private final BookmarkRepository bookmarkRepository;
+    private final RedisService redisService;
 
     /**
      * 고유 식별자로 소설을 찾습니다.
@@ -56,7 +58,9 @@ public class NovelService {
     @Transactional
     public NovelDTO getNovel(String novelId) {
         Novel novel = findById(novelId);
-        novel.increaseViewCount();
+        // Redis를 사용한 조회수 증가
+        redisService.incrementViewCount(novelId);
+
         int favoriteCount = favoriteRepository.countByNovelId(novelId);
         return NovelDTO.of(novel, favoriteCount);
     }
