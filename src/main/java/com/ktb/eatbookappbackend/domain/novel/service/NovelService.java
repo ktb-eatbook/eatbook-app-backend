@@ -58,7 +58,6 @@ public class NovelService {
     @Transactional
     public NovelDTO getNovel(String novelId) {
         Novel novel = findById(novelId);
-        // Redis를 사용한 조회수 증가
         redisService.incrementViewCount(novelId);
 
         int favoriteCount = favoriteRepository.countByNovelId(novelId);
