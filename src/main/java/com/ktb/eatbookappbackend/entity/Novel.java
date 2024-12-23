@@ -65,6 +65,10 @@ public class Novel extends SoftDeletableEntity {
         this.isCompleted = isCompleted;
     }
 
+    public void setViewCount(int viewCount) {
+        this.viewCount = viewCount;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {

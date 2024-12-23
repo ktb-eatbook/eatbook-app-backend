@@ -7,6 +7,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 public class NovelFixture {
 
     public static final int FAVORITE_COUNT = 5;
+    public static final int VIEW_COUNT = 100;
 
     public static Novel createNovel() {
         Novel novel = Novel.builder()

@@ -6,6 +6,8 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.ktb.eatbookappbackend.domain.comment.repository.CommentRepository;
@@ -17,6 +19,7 @@ import com.ktb.eatbookappbackend.domain.novel.exception.NovelException;
 import com.ktb.eatbookappbackend.domain.novel.message.NovelErrorCode;
 import com.ktb.eatbookappbackend.domain.novel.repository.NovelRepository;
 import com.ktb.eatbookappbackend.domain.novel.service.NovelService;
+import com.ktb.eatbookappbackend.domain.redis.service.RedisService;
 import com.ktb.eatbookappbackend.entity.Episode;
 import com.ktb.eatbookappbackend.entity.Novel;
 import com.ktb.eatbookappbackend.entity.constant.EpisodeSortOrder;
@@ -51,6 +54,9 @@ public class NovelServiceTest {
 
     @InjectMocks
     private NovelService novelService;
+
+    @Mock
+    private RedisService redisService;
 
     private Novel novel;
 
@@ -92,8 +98,10 @@ public class NovelServiceTest {
         final String expectedNovelId = novel.getId();
         final String expectedNovelTitle = novel.getTitle();
         final int expectedFavoriteCount = NovelFixture.FAVORITE_COUNT;
+        final int expectedViewCount = NovelFixture.VIEW_COUNT;
         when(novelRepository.findById(novel.getId())).thenReturn(Optional.of(novel));
         when(favoriteRepository.countByNovelId(novel.getId())).thenReturn(NovelFixture.FAVORITE_COUNT);
+        when(redisService.incrementViewCount(expectedNovelId)).thenReturn(expectedViewCount);
 
         // When
         NovelDTO result = novelService.getNovel(expectedNovelId);
@@ -103,6 +111,7 @@ public class NovelServiceTest {
         assertEquals(expectedNovelId, result.id());
         assertEquals(expectedNovelTitle, result.title());
         assertEquals(expectedFavoriteCount, result.favoriteCount());
+        verify(redisService, times(1)).incrementViewCount(expectedNovelId);
     }
 
     @Test
