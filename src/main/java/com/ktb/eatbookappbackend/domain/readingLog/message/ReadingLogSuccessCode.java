@@ -9,7 +9,8 @@ import org.springframework.http.HttpStatus;
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public enum ReadingLogSuccessCode implements MessageCode {
-    BOOKMARKS_RETRIEVED("성공적으로 최근에 읽은 독서 기록을 조회했습니다.", HttpStatus.OK);
+    BOOKMARKS_RETRIEVED("성공적으로 최근에 읽은 독서 기록을 조회했습니다.", HttpStatus.OK),
+    SUCCESS_CREATED("성공적으로 독서 기록을 생성했습니다.", HttpStatus.CREATED);
 
     private final String message;
     private final HttpStatus status;
