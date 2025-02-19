@@ -4,7 +4,7 @@ public record LastReadEpisodeDTO(
     String episodeId,
     int chapterNumber,
     String title,
-    int pageNumber,
+    int scriptOrder,
     String ttsLastPositionSeconds
 ) {
 

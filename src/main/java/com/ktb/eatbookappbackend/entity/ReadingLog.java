@@ -12,6 +12,7 @@ import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import jakarta.validation.constraints.NotNull;
 import java.sql.Time;
+import java.time.Duration;
 import java.util.Objects;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -29,11 +30,14 @@ public class ReadingLog extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
-    @Column(name = "page_number", nullable = false)
-    private int pageNumber;
+    @Column(nullable = false)
+    private int episodeOrder;
 
-    @Column(name = "tts_last_position_seconds", nullable = false)
-    private Time ttsLastPositionSeconds;
+    @Column(nullable = false)
+    private int scriptOrder;
+
+    @Column(nullable = false)
+    private Time latesDuration;
 
     @ManyToOne
     @JoinColumn(name = "member_id", nullable = false)
@@ -51,9 +55,10 @@ public class ReadingLog extends BaseEntity {
     private Episode episode;
 
     @Builder
-    public ReadingLog(int pageNumber, Time ttsLastPositionSeconds, Member member, Novel novel, Episode episode) {
-        this.pageNumber = pageNumber;
-        this.ttsLastPositionSeconds = ttsLastPositionSeconds;
+    public ReadingLog(int episodeOrder, int scriptOrder, Time latesDuration, Member member, Novel novel, Episode episode) {
+        this.episodeOrder = episodeOrder;
+        this.scriptOrder = scriptOrder;
+        this.latesDuration = latesDuration;
         this.member = member;
         this.novel = novel;
         this.episode = episode;
@@ -61,18 +66,15 @@ public class ReadingLog extends BaseEntity {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
         ReadingLog that = (ReadingLog) o;
         return Objects.equals(id, that.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(id);
+        return Objects.hash(id);
     }
 }
+

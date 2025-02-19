@@ -8,15 +8,17 @@ import com.ktb.eatbookappbackend.entity.ReadingLog;
 import java.sql.Time;
 
 public record ReadingLogDTO (
-        int pageNumber,
-        Time ttsLastPositionSeconds,
+        int episodeOrder,
+        int scriptOrder,
+        Time latesDuration,
         String novelId,
         String episodeId
 ) {
     public ReadingLog toEntity(final Member member, final Novel novel, final Episode episode) {
         return ReadingLog.builder()
-                .pageNumber(this.pageNumber)
-                .ttsLastPositionSeconds(this.ttsLastPositionSeconds)
+                .episodeOrder(this.episodeOrder)
+                .scriptOrder(this.scriptOrder)
+                .latesDuration(this.latesDuration)
                 .member(member)
                 .novel(novel)
                 .episode(episode)
