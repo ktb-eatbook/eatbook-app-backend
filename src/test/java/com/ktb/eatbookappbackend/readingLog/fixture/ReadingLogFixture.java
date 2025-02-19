@@ -1,5 +1,7 @@
 package com.ktb.eatbookappbackend.readingLog.fixture;
 
+import com.ktb.eatbookappbackend.domain.readingLog.dto.ReadingLogDTO;
+import com.ktb.eatbookappbackend.entity.Episode;
 import com.ktb.eatbookappbackend.entity.Member;
 import com.ktb.eatbookappbackend.entity.Novel;
 import com.ktb.eatbookappbackend.entity.ReadingLog;
@@ -10,20 +12,17 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 public class ReadingLogFixture {
 
-    public static final int PAGE_NUMBER = 10;
-    public static final Time TTS_LAST_POSITION_SECONDS = Time.valueOf("12:34:56");
+    public static final int EPISODE_ORDER = 1;
+    public static final int SCRIPT_ORDER = 10;
+    public static final Time LATES_DURATION = Time.valueOf("12:34:56");
 
-    public static ReadingLog createReadingLog(Member member, Novel novel) {
-        ReadingLog readingLog = ReadingLog.builder()
-            .pageNumber(PAGE_NUMBER)
-            .ttsLastPositionSeconds(TTS_LAST_POSITION_SECONDS)
-            .member(member)
-            .novel(novel)
-            .episode(EpisodeFixture.createEpisode(novel))
-            .build();
-
-        String readingLogId = UUID.randomUUID().toString();
-        ReflectionTestUtils.setField(readingLog, "id", readingLogId);
-        return readingLog;
+    public static ReadingLogDTO createReadingLogDTO(Member member, Novel novel, Episode episode) {
+        return new ReadingLogDTO(
+                EPISODE_ORDER,
+                SCRIPT_ORDER,
+                LATES_DURATION,
+                novel.getId(),
+                episode.getId()
+        );
     }
 }
